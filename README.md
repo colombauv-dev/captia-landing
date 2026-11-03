@@ -10,6 +10,7 @@ captialab.com apunta a GHL. Cada página tiene solo un bloque de código, pegado
 | Inicio | `/` | `<div id="captia-landing" data-page="home"></div>` |
 | Términos | `/terminos` | `<div id="captia-landing" data-page="terminos"></div>` |
 | Agenda tu demo | `/confirmacion-leadflow-inmo` | `<div id="captia-landing" data-page="agenda"></div>` |
+| Privacidad | `/privacidad` | `<div id="captia-landing" data-page="privacidad"></div>` |
 
 Debajo del `div`, en las tres:
 ```html
@@ -22,6 +23,8 @@ loader.js            → el cargador que usa GHL
 pages/home.html      → textos y estructura de la página principal
 pages/terminos.html  → Términos y Condiciones
 pages/agenda.html    → página de agenda (calendario de GHL embebido)
+pages/privacidad.html → Política de privacidad
+pages/footer.html    → footer compartido por todas las páginas
 assets/styles.css    → diseño (colores de marca al inicio)
 assets/main.js       → chat animado, FAQ, menú móvil y calculadora
 assets/favicon.svg   → ícono de la pestaña
