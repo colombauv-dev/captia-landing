@@ -260,3 +260,53 @@ h1, h2, h3, h4 { font-family: var(--font-head); font-weight: 600; line-height: 1
 @media (max-width: 960px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 560px) { .footer-grid { grid-template-columns: 1fr; gap: 32px; } .site-footer { padding-top: 50px; } }
 #captia-landing:has(.calc-fab) .footer-bottom { padding-bottom: 96px; }
+
+/* ---------- Diagnóstico Minuto Uno (pages/diagnostico.html) ---------- */
+.diag-hero { padding: 140px 0 100px; position: relative; overflow: hidden; }
+.diag-hero::before { content: ""; position: absolute; inset: 0; background: radial-gradient(600px 400px at 85% 40%, rgba(222, 252, 146, .07), transparent 70%); pointer-events: none; }
+.diag-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; position: relative; }
+.diag-intro { padding-top: 20px; }
+.diag-intro h1 { font-size: clamp(32px, 4vw, 46px); margin: 22px 0; color: var(--crema); }
+.diag-intro .lead { font-size: 17px; color: rgba(243, 239, 232, .8); margin-bottom: 26px; max-width: 520px; }
+.diag-gets { list-style: none; display: grid; gap: 12px; font-size: 15px; color: rgba(243, 239, 232, .9); }
+.diag-gets li { display: flex; gap: 10px; align-items: flex-start; }
+.diag-gets svg { color: var(--lima); margin-top: 4px; flex-shrink: 0; }
+.diag-card { background: var(--crema-2); color: var(--tinta); border-radius: 20px; padding: 32px; box-shadow: 0 30px 60px rgba(0, 0, 0, .35); min-height: 460px; scroll-margin-top: 96px; }
+.diag-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 8px 0 26px; }
+.diag-meta div { background: #fff; border: 1px solid var(--borde); border-radius: 12px; padding: 14px; text-align: center; }
+.diag-meta strong { display: block; font-family: var(--font-mono); font-size: 20px; }
+.diag-meta span { font-size: 12px; color: var(--gris); }
+.diag-full { width: 100%; justify-content: center; }
+.diag-form { display: grid; gap: 12px; }
+.diag-form label { display: grid; gap: 5px; font-size: 13px; font-weight: 600; }
+.diag-form input:not([type=checkbox]) { font: inherit; font-size: 15px; font-weight: 400; padding: 12px 14px; border: 1px solid var(--borde); border-radius: 12px; background: #fff; color: var(--tinta); }
+.diag-form input:focus { outline: 2px solid var(--verde); outline-offset: 0; border-color: var(--verde); }
+.diag-consent { display: flex !important; grid-template-columns: none; align-items: flex-start; gap: 9px !important; font-weight: 400 !important; font-size: 12.5px !important; color: var(--gris); }
+.diag-consent input { margin-top: 3px; accent-color: var(--verde); }
+.diag-consent a { text-decoration: underline; }
+.diag-error { color: #b23a1f; font-size: 13px; }
+.diag-score { display: grid; grid-template-columns: 96px 1fr; gap: 18px; align-items: center; margin: 14px 0 18px; }
+.ring { width: 96px; height: 96px; border-radius: 50%; display: grid; place-content: center; text-align: center; background: radial-gradient(closest-side, var(--crema-2) 78%, transparent 79%), conic-gradient(var(--verde) calc(var(--p) * 1%), #e5dfd3 0); }
+.ring span { font-family: var(--font-mono); font-size: 28px; font-weight: 700; line-height: 1; }
+.ring small { font-size: 11px; color: var(--gris); }
+.diag-tag { display: inline-block; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--lima); color: var(--verde); }
+.diag-weak { margin-top: 18px; }
+.weak-item { display: grid; grid-template-columns: 26px 1fr; gap: 10px; padding: 12px 0; border-top: 1px solid var(--borde); font-size: 14px; }
+.weak-item b { width: 24px; height: 24px; border-radius: 50%; background: var(--coral); color: var(--tinta); display: grid; place-items: center; font-size: 12px; }
+.weak-item em { color: var(--gris); font-style: normal; font-size: 12.5px; white-space: nowrap; }
+.diag-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+.diag-actions > * { flex: 1 1 200px; justify-content: center; text-align: center; }
+.diag-note { font-size: 12.5px; color: var(--gris); margin-top: 12px; text-align: center; }
+@media (max-width: 960px) {
+  .diag-grid { grid-template-columns: 1fr; gap: 36px; }
+  .diag-hero { padding: 120px 0 70px; }
+}
+@media (max-width: 760px) {
+  .nav.nav-min { display: flex; position: static; flex-direction: row; background: none; padding: 0; }
+  .diag-card { padding: 24px 20px; }
+  .diag-score { grid-template-columns: 80px 1fr; }
+  .ring { width: 80px; height: 80px; }
+}
+@media (max-width: 560px) {
+  .diag-score { grid-template-columns: 1fr; gap: 12px; }
+}

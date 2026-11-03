@@ -11,8 +11,9 @@ captialab.com apunta a GHL. Cada página tiene solo un bloque de código, pegado
 | Términos | `/terminos` | `<div id="captia-landing" data-page="terminos"></div>` |
 | Agenda tu demo | `/confirmacion-leadflow-inmo` | `<div id="captia-landing" data-page="agenda"></div>` |
 | Privacidad | `/privacidad` | `<div id="captia-landing" data-page="privacidad"></div>` |
+| Diagnóstico (lead magnet) | `/diagnostico` | `<div id="captia-landing" data-page="diagnostico"></div>` |
 
-Debajo del `div`, en las tres:
+Debajo del `div`, en todas:
 ```html
 <script src="https://colombauv-dev.github.io/captia-landing/loader.js"></script>
 ```
@@ -25,11 +26,15 @@ pages/home.html      → textos y estructura de la página principal
 pages/terminos.html  → Términos y Condiciones
 pages/agenda.html    → página de agenda (calendario de GHL embebido)
 pages/privacidad.html → Política de privacidad
+pages/diagnostico.html → Diagnóstico Minuto Uno (lead magnet)
+assets/diagnostico.js → preguntas, puntaje, estimación y envío a GHL (objeto DIAG)
+assets/checklist-minuto-uno.pdf → checklist que se descarga al final
+lead-magnet/          → fuente del PDF (checklist.html) y script para regenerarlo
 pages/footer.html    → footer compartido por todas las páginas
 assets/styles.css    → diseño (colores de marca al inicio)
 assets/main.js       → chat animado, FAQ, menú móvil y calculadora
 assets/favicon.svg   → ícono de la pestaña
-index.html           → solo vista previa en GitHub Pages (?p=terminos, ?p=agenda)
+index.html           → solo vista previa en GitHub Pages (?p=terminos, ?p=agenda, ?p=diagnostico)
 ```
 
 ## 3. Cómo fluye un cambio
@@ -42,3 +47,4 @@ Si no ves el cambio, recarga con Ctrl+Shift+R.
 - Título, descripción para Google, imagen para redes y favicon: configúralos también en los ajustes de cada página en GHL.
 - Calendario de demo: ID `O0rqdAkkw1PBMRZ0QmMT` en `pages/agenda.html`.
 - Supuestos de la calculadora: objeto `CALC` en `assets/main.js`.
+- Diagnóstico: la URL del Inbound Webhook de GHL va en `webhook` dentro de `DIAG` (assets/diagnostico.js). Mientras esté vacía, el diagnóstico funciona pero los datos no llegan a GHL.

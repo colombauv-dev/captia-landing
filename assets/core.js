@@ -3,7 +3,7 @@
    En cada página de GHL va un bloque de código como este:
      <div id="captia-landing" data-page="home"></div>
      <script src="https://colombauv-dev.github.io/captia-landing/loader.js"></script>
-   data-page: home | terminos | agenda
+   data-page: home | terminos | agenda | privacidad | diagnostico
    ========================================================= */
 (function () {
   var root = document.getElementById('captia-landing');
@@ -73,6 +73,7 @@
       root.innerHTML = parts[0] + parts[1];
       addJs(BASE + 'assets/main.js?v=' + V);
       if (page === 'agenda') addJs('https://link.msgsndr.com/js/form_embed.js');
+      if (page === 'diagnostico') addJs(BASE + 'assets/diagnostico.js?v=' + V);
       if (location.hash) {
         var t = document.querySelector(location.hash);
         if (t) setTimeout(function () { t.scrollIntoView(); }, 300);
