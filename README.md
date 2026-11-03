@@ -19,7 +19,8 @@ Debajo del `div`, en las tres:
 
 ## 2. GitHub: guarda el contenido
 ```
-loader.js            → el cargador que usa GHL
+loader.js            → el cargador que usa GHL (solo trae assets/core.js sin caché)
+assets/core.js       → lógica de carga: estilos, página, footer y márgenes
 pages/home.html      → textos y estructura de la página principal
 pages/terminos.html  → Términos y Condiciones
 pages/agenda.html    → página de agenda (calendario de GHL embebido)
