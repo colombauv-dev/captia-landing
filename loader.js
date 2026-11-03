@@ -24,6 +24,29 @@
     document.body.appendChild(s);
   }
 
+  // Quita márgenes y rellenos que GHL pone en las secciones, filas y columnas que contienen la web
+  function stripGhlSpacing() {
+    var el = root.parentElement;
+    while (el && el !== document.documentElement) {
+      ['margin', 'padding'].forEach(function (p) { el.style.setProperty(p, '0', 'important'); });
+      el.style.setProperty('max-width', 'none', 'important');
+      el.style.setProperty('width', '100%', 'important');
+      el.style.setProperty('border', '0', 'important');
+      el.style.setProperty('box-shadow', 'none', 'important');
+      el.style.setProperty('min-height', '0', 'important');
+      if (el !== document.body) el.style.setProperty('background', 'transparent', 'important');
+      el = el.parentElement;
+    }
+    document.documentElement.style.setProperty('margin', '0', 'important');
+    document.documentElement.style.setProperty('padding', '0', 'important');
+    document.body.style.setProperty('overflow-x', 'hidden', 'important');
+  }
+  stripGhlSpacing();
+  // GHL a veces vuelve a aplicar estilos después de cargar: repetimos un par de veces
+  setTimeout(stripGhlSpacing, 500);
+  setTimeout(stripGhlSpacing, 2000);
+  window.addEventListener('load', stripGhlSpacing);
+
   // Fuente, estilos y favicon
   var pre = document.createElement('link');
   pre.rel = 'preconnect';
