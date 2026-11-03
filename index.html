@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Captia — Agentes de IA para inmobiliarias en Chile</title>
+  <meta name="robots" content="noindex">
+</head>
+<body>
+  <!-- Vista previa en GitHub Pages. La web real vive en GHL (captialab.com).
+       Para ver otra página: ?p=terminos o ?p=agenda -->
+  <div id="captia-landing"></div>
+  <script>
+    var p = new URLSearchParams(location.search).get('p') || 'home';
+    var el = document.getElementById('captia-landing');
+    el.setAttribute('data-page', p);
+    el.setAttribute('data-base', location.href.split('?')[0].replace(/index\.html$/, '').replace(/[^/]*$/, ''));
+  </script>
+  <script src="loader.js"></script>
+</body>
+</html>
