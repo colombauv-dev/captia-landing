@@ -113,6 +113,10 @@ if (modal) {
   modal.querySelector('.modal-close').addEventListener('click', close);
   modal.addEventListener('click', e => { if (e.target === modal) close(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  // Abre la calculadora desde cualquier link a /#calcula
+  const checkHash = () => { if (location.hash === '#calcula') { open(); history.replaceState(null, '', location.pathname); } };
+  window.addEventListener('hashchange', checkHash);
+  checkHash();
 
   function render() {
     const total = CALC.questions.length;

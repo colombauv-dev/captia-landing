@@ -65,10 +65,12 @@
   }
 
   // Contenido de la página
-  fetch(BASE + 'pages/' + page + '.html?v=' + V)
-    .then(function (r) { return r.text(); })
-    .then(function (html) {
-      root.innerHTML = html;
+  function get(name) {
+    return fetch(BASE + 'pages/' + name + '.html?v=' + V).then(function (r) { return r.text(); });
+  }
+  Promise.all([get(page), get('footer')])
+    .then(function (parts) {
+      root.innerHTML = parts[0] + parts[1];
       addJs(BASE + 'assets/main.js?v=' + V);
       if (page === 'agenda') addJs('https://link.msgsndr.com/js/form_embed.js');
       if (location.hash) {
