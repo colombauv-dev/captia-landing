@@ -45,6 +45,6 @@ Si no ves el cambio, recarga con Ctrl+Shift+R.
 - No cambies el nombre del repositorio ni de la cuenta de GitHub.
 - La app de Claude en GitHub tiene que seguir con acceso a `captia-landing`.
 - Título, descripción para Google, imagen para redes y favicon: configúralos también en los ajustes de cada página en GHL.
-- Calendario de demo: ID `O0rqdAkkw1PBMRZ0QmMT` en `pages/agenda.html`.
+- Calendario de demo: ID `IMmzTFsnoRphTdZfixux` en `pages/agenda.html`.
 - Supuestos de la calculadora: objeto `CALC` en `assets/main.js`.
 - Diagnóstico: la URL del Inbound Webhook de GHL va en `webhook` dentro de `DIAG` (assets/diagnostico.js). Mientras esté vacía, el diagnóstico funciona pero los datos no llegan a GHL.
