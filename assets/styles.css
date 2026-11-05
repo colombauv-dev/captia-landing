@@ -340,3 +340,26 @@ h1, h2, h3, h4 { font-family: var(--font-head); font-weight: 600; line-height: 1
   50%      { opacity: 1;   box-shadow: 0 0 6px var(--lima), 0 0 14px var(--lima); }
 }
 @media (prefers-reduced-motion: reduce) { .pill::before { animation: none; } }
+
+/* ---------- Cómo funciona: aparición al hacer scroll ---------- */
+.phase.reveal-ready .phase-text { opacity: 0; transition: opacity .7s ease, transform .7s ease; }
+.phase.reveal-ready.left .phase-text { transform: translateX(-40px); }
+.phase.reveal-ready.right .phase-text { transform: translateX(40px); }
+.phase.reveal-ready .phase-dot { opacity: 0; transform: scale(.6); transition: opacity .5s ease, transform .5s cubic-bezier(.34, 1.56, .64, 1); }
+.phase.reveal-ready.in-view .phase-text { opacity: 1; transform: none; transition-delay: .15s; }
+.phase.reveal-ready.in-view .phase-dot { opacity: 1; transform: scale(1); }
+@media (max-width: 760px) {
+  .phase.reveal-ready.left .phase-text, .phase.reveal-ready.right .phase-text { transform: translateY(24px); }
+}
+
+/* ---------- Cómo funciona: luz que gira alrededor del círculo ---------- */
+.phase-dot::after {
+  content: ""; position: absolute; inset: -11px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle at 50% 4px, #fff 0 2px, var(--lima) 3px 4.5px, rgba(222, 252, 146, .5) 6.5px, transparent 11px);
+  filter: drop-shadow(0 0 6px var(--lima));
+  animation: phase-orbit 3.2s linear infinite;
+}
+.phase:nth-child(2) .phase-dot::after { animation-delay: -1.1s; }
+.phase:nth-child(3) .phase-dot::after { animation-delay: -2.2s; }
+@keyframes phase-orbit { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .phase-dot::after { animation: none; } }

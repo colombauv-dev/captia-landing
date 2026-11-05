@@ -94,3 +94,17 @@ if (diagModal) {
   window.addEventListener('hashchange', checkHash);
   checkHash();
 }
+
+/* ---------- Cómo funciona: las fases aparecen al hacer scroll ---------- */
+(function () {
+  const phases = document.querySelectorAll('.phase');
+  if (!phases.length) return;
+  if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  phases.forEach(p => p.classList.add('reveal-ready'));
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in-view'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.35, rootMargin: '0px 0px -10% 0px' });
+  phases.forEach(p => io.observe(p));
+})();
