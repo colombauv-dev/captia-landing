@@ -137,7 +137,6 @@
       full_name: contact.name,
       email: contact.email,
       phone: contact.phone,
-      company_name: contact.company,
       source: 'Diagnóstico Minuto Uno',
       diag_puntaje: r.score,
       diag_nivel: r.level.tag,
@@ -245,7 +244,6 @@
         <label>Nombre<input name="name" autocomplete="name" required placeholder="Cristián Molina"></label>
         <label>Correo<input name="email" type="email" autocomplete="email" required placeholder="cristian@inmobiliaria.cl"></label>
         <label>WhatsApp<input name="phone" type="tel" autocomplete="tel" required placeholder="+56 9 1234 5678"></label>
-        <label>Inmobiliaria<input name="company" autocomplete="organization" required placeholder="Nombre de tu inmobiliaria"></label>
         <label class="diag-consent"><input type="checkbox" name="ok" required> Acepto la <a href="/privacidad" target="_blank">política de privacidad</a> y recibir el resultado y comunicaciones de Captia.</label>
         <p class="diag-error" hidden></p>
         <div class="calc-nav">
@@ -264,10 +262,9 @@
       if (!f.name || f.name.trim().length < 2) msg = 'Escribe tu nombre.';
       else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email || '')) msg = 'Revisa tu correo.';
       else if (phoneDigits.length < 8) msg = 'Revisa tu número de WhatsApp.';
-      else if (!f.company || !f.company.trim()) msg = 'Escribe el nombre de tu inmobiliaria.';
       else if (!f.ok) msg = 'Debes aceptar la política de privacidad.';
       if (msg) { err.textContent = msg; err.hidden = false; return; }
-      contact = { name: f.name.trim(), email: f.email.trim(), phone: f.phone.trim(), company: f.company.trim() };
+      contact = { name: f.name.trim(), email: f.email.trim(), phone: f.phone.trim() };
       const r = compute();
       send(r);
       render();
@@ -279,7 +276,7 @@
     const r = compute();
     const first = esc(contact.name.split(' ')[0]);
     app.innerHTML = `
-      <div class="step-label">TU RESULTADO · ${esc(contact.company).toUpperCase()}</div>
+      <div class="step-label">TU INFORME COMPLETO</div>
       <div class="diag-score">
         <div class="ring" style="--p:${r.score}"><span>${r.score}</span><small>/100</small></div>
         <div>
