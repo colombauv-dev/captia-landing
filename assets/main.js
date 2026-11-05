@@ -120,3 +120,23 @@ if (diagModal) {
   }, { threshold: 0.4 });
   io.observe(flow);
 })();
+
+/* ---------- Qué incluye: tarjetas por filas de tres al hacer scroll ---------- */
+(function () {
+  const grid = document.querySelector('.cards');
+  if (!grid) return;
+  if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const cards = [...grid.querySelectorAll('.card')];
+  grid.classList.add('reveal-ready');
+  // Cuando aparece la primera tarjeta de una fila, se muestra la fila completa
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const cols = getComputedStyle(grid).gridTemplateColumns.split(' ').length || 3;
+      const i = cards.indexOf(e.target);
+      const start = i - (i % cols);
+      cards.slice(start, start + cols).forEach(c => { c.classList.add('in-view'); io.unobserve(c); });
+    });
+  }, { threshold: 0.3, rootMargin: '0px 0px -8% 0px' });
+  cards.forEach(c => io.observe(c));
+})();

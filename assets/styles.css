@@ -410,3 +410,11 @@ h1, h2, h3, h4 { font-family: var(--font-head); font-weight: 600; line-height: 1
 /* La primera tarjeta se ve apagada sin dejar ver la línea a través */
 .flow-card.muted, .flow.reveal-ready.in-view .flow-card.muted { opacity: 1; }
 .flow-card.muted > * { opacity: .55; }
+
+/* ---------- Qué incluye: tarjetas aparecen por filas de tres ---------- */
+.cards.reveal-ready .card { opacity: 0; transform: translateY(30px); transition: opacity .6s ease, transform .6s ease, box-shadow .2s; }
+.cards.reveal-ready .card.in-view { opacity: 1; transform: none; }
+.cards.reveal-ready .card.in-view:hover { transform: translateY(-3px); }
+.cards.reveal-ready .card:nth-child(3n+2).in-view { transition-delay: .15s; }
+.cards.reveal-ready .card:nth-child(3n+3).in-view { transition-delay: .3s; }
+@media (max-width: 760px) { .cards.reveal-ready .card.in-view { transition-delay: 0s !important; } }
