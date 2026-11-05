@@ -207,11 +207,40 @@
   }
 
   function renderForm() {
+    const r = compute();
     app.innerHTML = `
       <div class="progress"><div style="width:${(TOTAL / (TOTAL + 1)) * 100}%"></div></div>
-      <div class="step-label">ÚLTIMO PASO</div>
-      <div class="q-title">Tu diagnóstico está listo</div>
-      <div class="q-hint">Déjanos tus datos para ver el resultado. Te enviamos también el Checklist Minuto Uno en PDF.</div>
+      <div class="step-label">TU RESULTADO</div>
+      <div class="diag-score">
+        <div class="ring" style="--p:${r.score}"><span>${r.score}</span><small>/100</small></div>
+        <div>
+          <span class="diag-tag">${r.level.tag}</span>
+          <div class="q-title" style="margin-top:8px">${r.level.title}</div>
+        </div>
+      </div>
+
+      <div class="diag-locked" aria-hidden="true">
+        <div class="diag-locked-content">
+          <div class="result-grid">
+            <div><span>Leads que se enfrían al mes</span><strong>~00</strong></div>
+            <div><span>Oportunidad anual estimada</span><strong>000–000 UF</strong></div>
+          </div>
+          <div class="diag-weak">
+            <div class="step-label" style="margin-bottom:10px">TUS PUNTOS DE FUGA</div>
+            <div class="weak-item"><b>1</b><p>Tu primera respuesta llega tarde y el cliente sigue preguntando a otras inmobiliarias.</p></div>
+            <div class="weak-item"><b>2</b><p>Las consultas de noche y fin de semana esperan hasta el siguiente día hábil.</p></div>
+          </div>
+        </div>
+        <div class="diag-lock-badge">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          Cuántos leads pierdes, cuánto te cuesta en UF y tus 3 puntos de fuga
+        </div>
+      </div>
+
+      <div class="diag-unlock">
+        <div class="q-title" style="font-size:18px">Desbloquea tu informe completo</div>
+        <div class="q-hint">Te mostramos el resto del resultado aquí mismo y te enviamos el Checklist Minuto Uno en PDF.</div>
+      </div>
       <form class="diag-form" novalidate>
         <label>Nombre<input name="name" autocomplete="name" required placeholder="Cristián Molina"></label>
         <label>Correo<input name="email" type="email" autocomplete="email" required placeholder="cristian@inmobiliaria.cl"></label>
@@ -221,7 +250,7 @@
         <p class="diag-error" hidden></p>
         <div class="calc-nav">
           <button type="button" class="btn-ghost" data-act="back">Atrás</button>
-          <button type="submit" class="btn">Ver mi resultado</button>
+          <button type="submit" class="btn">Ver informe completo</button>
         </div>
       </form>`;
     const form = app.querySelector('form');
