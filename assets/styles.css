@@ -330,3 +330,5 @@ h1, h2, h3, h4 { font-family: var(--font-head); font-weight: 600; line-height: 1
 .footnote a { color: rgba(243, 239, 232, .75); text-decoration: underline; text-underline-offset: 3px; }
 .footnote a:hover { color: var(--lima); }
 .footnote-2 { margin-top: 10px; }
+.stats .footnote { font-size: 11px; margin-top: 22px; color: rgba(243, 239, 232, .45); }
+.fn-sep { margin: 0 10px; opacity: .5; }
