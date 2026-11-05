@@ -317,3 +317,8 @@ h1, h2, h3, h4 { font-family: var(--font-head); font-weight: 600; line-height: 1
 .diag-start .diag-get { display: flex; align-items: center; gap: 14px; cursor: default; }
 .diag-start .diag-get:hover { border-color: var(--borde); }
 .diag-get-num { flex-shrink: 0; min-width: 62px; text-align: center; font-family: var(--font-mono); font-size: 12px; font-weight: 700; padding: 5px 8px; border-radius: 8px; background: #eef5d8; color: var(--verde); }
+
+/* ---------- Logo (imagen) ---------- */
+.logo-img { height: 42px; width: auto; display: block; }
+.site-footer .logo-img { height: 46px; }
+@media (max-width: 760px) { .logo-img { height: 34px; } }
