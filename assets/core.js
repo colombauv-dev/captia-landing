@@ -55,14 +55,19 @@
   document.head.appendChild(pre);
   addCss('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap');
   addCss(BASE + 'assets/styles.css?v=' + V);
-  if (!document.querySelector('link[rel="icon"][data-captia]')) {
-    var fav = document.createElement('link');
-    fav.rel = 'icon';
-    fav.type = 'image/svg+xml';
-    fav.href = BASE + 'assets/favicon.svg';
-    fav.setAttribute('data-captia', '');
-    document.head.appendChild(fav);
+  // Favicon de Captia: reemplaza el que pone GHL por defecto
+  function setFavicons() {
+    document.querySelectorAll('link[rel~="icon"]:not([data-captia]), link[rel="apple-touch-icon"]:not([data-captia])').forEach(function (l) { l.remove(); });
+    if (document.querySelector('link[data-captia]')) return;
+    [['icon', '48x48', 'assets/favicon-48.png'], ['icon', '192x192', 'assets/favicon-192.png'], ['apple-touch-icon', '180x180', 'assets/apple-touch-icon.png']].forEach(function (f) {
+      var l = document.createElement('link');
+      l.rel = f[0]; l.type = 'image/png'; l.sizes = f[1]; l.href = BASE + f[2] + '?v=2';
+      l.setAttribute('data-captia', '');
+      document.head.appendChild(l);
+    });
   }
+  setFavicons();
+  window.addEventListener('load', setFavicons);
 
   // Contenido de la página
   function get(name) {
