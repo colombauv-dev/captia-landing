@@ -160,20 +160,23 @@
   }
 
   function scrollIntoCard() {
+    const box = app.closest('.modal-box');
+    if (box) { box.scrollTop = 0; return; }
     if (window.innerWidth < 960) app.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   function renderStart() {
     app.innerHTML = `
-      <div class="step-label">DIAGNÓSTICO MINUTO UNO</div>
-      <div class="q-title" style="font-size:22px">¿Tu inmobiliaria responde en el minuto uno?</div>
-      <p class="q-hint">9 preguntas de opción múltiple. Sin datos técnicos: responde con lo que pasa en un día normal.</p>
-      <div class="diag-meta">
-        <div><strong>2 min</strong><span>duración</span></div>
-        <div><strong>0–100</strong><span>tu puntaje</span></div>
-        <div><strong>PDF</strong><span>checklist gratis</span></div>
+      <div class="step-label">DIAGNÓSTICO MINUTO UNO · GRATIS</div>
+      <div class="q-title">¿Tu inmobiliaria responde en el minuto uno?</div>
+      <div class="q-hint">9 preguntas sobre cómo atiendes cada consulta. Toma 2 minutos y al final recibes:</div>
+      <div class="options diag-start">
+        <div class="option diag-get"><span class="diag-get-num">0–100</span><span>Tu puntaje Minuto Uno</span></div>
+        <div class="option diag-get"><span class="diag-get-num">Top 3</span><span>Dónde se te escapan los clientes</span></div>
+        <div class="option diag-get"><span class="diag-get-num">UF</span><span>Cuánto te cuesta al año responder tarde</span></div>
+        <div class="option diag-get"><span class="diag-get-num">PDF</span><span>Checklist con plantillas para copiar y pegar</span></div>
       </div>
-      <button class="btn btn-lg diag-full" data-act="start">Empezar diagnóstico</button>`;
+      <div class="calc-nav"><span></span><button class="btn" data-act="start">Empezar diagnóstico</button></div>`;
     app.querySelector('[data-act="start"]').addEventListener('click', () => { step = 0; render(); scrollIntoCard(); });
   }
 

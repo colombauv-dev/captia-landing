@@ -79,3 +79,18 @@ document.querySelectorAll('.faq-item').forEach(item => {
     }
   });
 });
+
+/* ---------- Diagnóstico Minuto Uno en pop-up (home) ---------- */
+const diagModal = document.getElementById('diag-modal');
+if (diagModal) {
+  const open = () => { diagModal.classList.add('open'); document.body.style.overflow = 'hidden'; };
+  const close = () => { diagModal.classList.remove('open'); document.body.style.overflow = ''; };
+  document.querySelectorAll('[data-open-diag]').forEach(b => b.addEventListener('click', open));
+  diagModal.querySelector('.modal-close').addEventListener('click', close);
+  diagModal.addEventListener('click', e => { if (e.target === diagModal) close(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  // Links a /#diagnostico (footer, campañas) abren el pop-up
+  const checkHash = () => { if (location.hash === '#diagnostico') { open(); history.replaceState(null, '', location.pathname); } };
+  window.addEventListener('hashchange', checkHash);
+  checkHash();
+}

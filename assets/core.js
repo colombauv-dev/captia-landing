@@ -73,7 +73,7 @@
       root.innerHTML = parts[0] + parts[1];
       addJs(BASE + 'assets/main.js?v=' + V);
       if (page === 'agenda') addJs('https://link.msgsndr.com/js/form_embed.js');
-      if (page === 'diagnostico') addJs(BASE + 'assets/diagnostico.js?v=' + V);
+      if (page === 'diagnostico' || page === 'home') addJs(BASE + 'assets/diagnostico.js?v=' + V);
       if (location.hash) {
         var t = document.querySelector(location.hash);
         if (t) setTimeout(function () { t.scrollIntoView(); }, 300);
