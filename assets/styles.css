@@ -332,3 +332,11 @@ h1, h2, h3, h4 { font-family: var(--font-head); font-weight: 600; line-height: 1
 .footnote-2 { margin-top: 10px; }
 .stats .footnote { font-size: 11px; margin-top: 22px; color: rgba(243, 239, 232, .45); }
 .fn-sep { margin: 0 10px; opacity: .5; }
+
+/* ---------- Punto de la etiqueta: brillo que sube y baja ---------- */
+.pill::before { animation: pill-glow 2.4s ease-in-out infinite; }
+@keyframes pill-glow {
+  0%, 100% { opacity: .45; box-shadow: 0 0 2px var(--lima); }
+  50%      { opacity: 1;   box-shadow: 0 0 6px var(--lima), 0 0 14px var(--lima); }
+}
+@media (prefers-reduced-motion: reduce) { .pill::before { animation: none; } }
