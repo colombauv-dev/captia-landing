@@ -17,7 +17,7 @@
 
   const DIAG = {
     // Pega aquí la URL del Inbound Webhook de GHL (Automatizaciones → Workflow → Trigger "Inbound Webhook")
-    webhook: '',
+    webhook: 'https://services.leadconnectorhq.com/hooks/LvhyaT8Bnb5KncPj1vys/webhook-trigger/0e1a4a53-bf16-47d7-9dad-439c26bd34fd',
     pdf: BASE + 'assets/checklist-minuto-uno.pdf',
     demo: '/confirmacion-leadflow-inmo',
 
