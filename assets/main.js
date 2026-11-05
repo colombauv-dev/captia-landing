@@ -108,3 +108,15 @@ if (diagModal) {
   }, { threshold: 0.35, rootMargin: '0px 0px -10% 0px' });
   phases.forEach(p => io.observe(p));
 })();
+
+/* ---------- Problema: tarjetas y línea de luz al hacer scroll ---------- */
+(function () {
+  const flow = document.querySelector('.flow');
+  if (!flow) return;
+  if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  flow.classList.add('reveal-ready');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { flow.classList.add('in-view'); io.disconnect(); } });
+  }, { threshold: 0.4 });
+  io.observe(flow);
+})();
