@@ -419,3 +419,10 @@ h1, h2, h3, h4 { font-family: var(--font-head); font-weight: 600; line-height: 1
 .cards.reveal-ready .card:nth-child(3n+2).in-view { transition-delay: .15s; }
 .cards.reveal-ready .card:nth-child(3n+3).in-view { transition-delay: .3s; }
 @media (max-width: 760px) { .cards.reveal-ready .card.in-view { transition-delay: 0s !important; } }
+
+/* ---------- Botón del header según dispositivo ---------- */
+.only-mobile { display: none !important; }
+@media (max-width: 760px) {
+  .only-desktop { display: none !important; }
+  .only-mobile { display: inline-flex !important; }
+}

@@ -140,3 +140,12 @@ if (diagModal) {
   }, { threshold: 0.3, rootMargin: '0px 0px -8% 0px' });
   cards.forEach(c => io.observe(c));
 })();
+
+/* ---------- Diagnóstico (celular): el botón del header baja hasta el diagnóstico ---------- */
+document.querySelectorAll('[data-scroll-diag]').forEach(btn => btn.addEventListener('click', e => {
+  const target = document.getElementById('diag-app');
+  if (!target) return;
+  e.preventDefault();
+  const y = target.getBoundingClientRect().top + window.scrollY - 96;
+  window.scrollTo({ top: y, behavior: 'smooth' });
+}));
