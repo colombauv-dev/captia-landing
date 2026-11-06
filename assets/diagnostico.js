@@ -7,6 +7,9 @@
      [texto, puntos 0–3, factor para la estimación]
    - levels: textos del resultado según el puntaje
    - assumptions: supuestos de la estimación en UF
+   - Preguntas con "when": solo se muestran si se cumple la condición
+     (la comisión es para corredoras; el precio por unidad, para
+     inmobiliarias que venden sus propios proyectos)
    ========================================================= */
 (function () {
   const app = document.getElementById('diag-app');
@@ -22,6 +25,11 @@
     demo: '/confirmacion-leadflow-inmo',
 
     questions: [
+      { key: 'kind', type: 'data',
+        q: '¿Qué vende tu inmobiliaria?',
+        hint: 'Así calculamos bien cuánto te cuesta cada cliente que se va.',
+        opts: [['Mis propios proyectos (desarrollo o construyo)', 'own'], ['Propiedades de terceros (corretaje)', 'broker']] },
+
       { key: 'leads', type: 'data',
         q: '¿Cuántas consultas nuevas recibe tu inmobiliaria al mes?',
         hint: 'Suma todos los canales: WhatsApp, Instagram, portales, web, correo. Una estimación basta.',
@@ -71,10 +79,15 @@
         opts: [['Sí, lo medimos todos los meses', 3], ['Más o menos, a ojo', 1], ['No lo medimos', 0]],
         weak: 'No mides cuántas consultas llegan a visita, así que no sabes dónde se te van ni si una mejora funciona.', step: 1 },
 
-      { key: 'comm', type: 'data',
-        q: '¿Cuál es la comisión o margen promedio por venta, en UF?',
+      { key: 'comm', type: 'data', when: () => kind() === 'broker',
+        q: '¿Cuál es la comisión promedio por venta, en UF?',
         hint: 'Lo que gana tu inmobiliaria por cada propiedad vendida.',
-        opts: [['Menos de 50 UF', 35], ['Entre 50 y 100 UF', 70], ['Entre 100 y 200 UF', 140], ['Más de 200 UF', 250], ['Prefiero no decirlo', 70]] }
+        opts: [['Menos de 50 UF', 35], ['Entre 50 y 100 UF', 70], ['Entre 100 y 200 UF', 140], ['Más de 200 UF', 250], ['Prefiero no decirlo', 70]] },
+
+      { key: 'price', type: 'data', when: () => kind() === 'own',
+        q: '¿Cuál es el precio promedio de las unidades que vendes?',
+        hint: 'Una estimación basta. Si prefieres no decirlo, te mostramos solo las unidades.',
+        opts: [['Menos de 2.500 UF', 2000], ['Entre 2.500 y 4.000 UF', 3250], ['Entre 4.000 y 6.000 UF', 5000], ['Entre 6.000 y 10.000 UF', 8000], ['Más de 10.000 UF', 12000], ['Prefiero no decirlo', null]] }
     ],
 
     levels: [
@@ -95,14 +108,20 @@
   };
 
   const SCORE_QS = DIAG.questions.filter(q => q.type === 'score');
-  const TOTAL = DIAG.questions.length;
-  let step = -1;              // -1 = portada
+  const ALL = DIAG.questions;
   let answers = {};
+  // tipo de inmobiliaria elegido en la pregunta 1 ('own' o 'broker'); por defecto, propios
+  const kind = () => (answers.kind === undefined ? 'own' : ALL[0].opts[answers.kind][1]);
+  const qs = () => ALL.filter(q => !q.when || q.when());
+  const total = () => qs().length;
+  let step = -1;              // -1 = portada
   let contact = null;
 
   const fmt = n => Math.round(n).toLocaleString('es-CL');
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const opt = key => { const Q = DIAG.questions.find(q => q.key === key); return Q.opts[answers[key]]; };
+  const opt = key => { const Q = ALL.find(q => q.key === key); return Q.opts[answers[key]]; };
+  // cifras chicas con un decimal (1,5 unidades); las grandes, redondeadas
+  const fmtU = n => n < 10 ? (Math.round(n * 10) / 10).toLocaleString('es-CL') : fmt(n);
 
   /* ---------- Cálculos ---------- */
   function compute() {
@@ -118,7 +137,10 @@
     const lostRate = Math.min(0.85, (1 - A.offShare) * slow + A.offShare * offLoss + extra);
     const lost = leads * lostRate;
     const visits = lost * A.visitRate;
-    const ufYear = visits * A.visitToSale * opt('comm')[1] * 12;
+    const salesYear = visits * A.visitToSale * 12;
+    const own = kind() === 'own';
+    const price = own ? opt('price')[1] : null;
+    const ufYear = own ? (price ? salesYear * price : 0) : salesYear * opt('comm')[1];
 
     const weak = SCORE_QS
       .map(q => ({ q, pts: opt(q.key)[1] }))
@@ -126,7 +148,14 @@
       .sort((a, b) => a.pts - b.pts)
       .slice(0, 3);
 
-    return { score, level, lost, visits, ufLow: ufYear * 0.7, ufHigh: ufYear * 1.3, weak };
+    const r = { score, level, lost, visits, own, price,
+      unitsLow: salesYear * 0.7, unitsHigh: salesYear * 1.3,
+      ufLow: ufYear * 0.7, ufHigh: ufYear * 1.3, weak };
+    // texto de la estimación, igual en la web y en el correo
+    r.estimate = own
+      ? fmtU(r.unitsLow) + '–' + fmtU(r.unitsHigh) + ' unidades al año' + (price ? ' (' + fmt(r.ufLow) + '–' + fmt(r.ufHigh) + ' UF en ventas)' : '')
+      : fmt(r.ufLow) + '–' + fmt(r.ufHigh) + ' UF';
+    return r;
   }
 
   /* ---------- Envío a GHL ---------- */
@@ -141,9 +170,10 @@
       diag_puntaje: r.score,
       diag_nivel: r.level.tag,
       diag_leads_perdidos_mes: Math.round(r.lost),
-      diag_uf_anual: fmt(r.ufLow) + ' – ' + fmt(r.ufHigh) + ' UF',
+      diag_uf_anual: r.estimate,
+      diag_tipo: r.own ? 'Proyectos propios' : 'Corretaje',
       diag_puntos_fuga: r.weak.map(w => w.q.q).join(' | '),
-      diag_respuestas: DIAG.questions.map(q => q.key + ': ' + opt(q.key)[0]).join(' | '),
+      diag_respuestas: qs().map(q => q.key + ': ' + opt(q.key)[0]).join(' | '),
       pagina: location.href
     });
     // no-cors: GHL recibe los datos aunque el navegador no pueda leer la respuesta
@@ -153,7 +183,7 @@
   /* ---------- Vistas ---------- */
   function render() {
     if (step === -1) return renderStart();
-    if (step < TOTAL) return renderQuestion();
+    if (step < total()) return renderQuestion();
     if (!contact) return renderForm();
     return renderResult();
   }
@@ -168,7 +198,7 @@
     app.innerHTML = `
       <div class="step-label">DIAGNÓSTICO MINUTO UNO · GRATIS</div>
       <div class="q-title">¿Tu inmobiliaria responde en el minuto uno?</div>
-      <div class="q-hint">9 preguntas sobre cómo atiendes cada consulta. Toma 2 minutos y al final recibes:</div>
+      <div class="q-hint">10 preguntas sobre cómo atiendes cada consulta. Toma 2 minutos y al final recibes:</div>
       <div class="options diag-start">
         <div class="option diag-get"><span class="diag-get-num">0–100</span><span>Tu puntaje Minuto Uno</span></div>
         <div class="option diag-get"><span class="diag-get-num">Top 3</span><span>Dónde se te escapan los clientes</span></div>
@@ -180,7 +210,8 @@
   }
 
   function renderQuestion() {
-    const Q = DIAG.questions[step];
+    const Q = qs()[step];
+    const TOTAL = total();
     const sel = answers[Q.key];
     app.innerHTML = `
       <div class="progress"><div style="width:${(step / (TOTAL + 1)) * 100}%"></div></div>
@@ -198,7 +229,7 @@
       answers[Q.key] = +b.dataset.i;
       render();
       // avanza solo al elegir, con una pequeña pausa para ver la selección
-      setTimeout(() => { if (DIAG.questions[step] === Q) { step++; render(); } }, 260);
+      setTimeout(() => { if (qs()[step] === Q) { step++; render(); } }, 260);
     }));
     app.querySelector('[data-act="next"]').addEventListener('click', () => { step++; render(); });
     const back = app.querySelector('[data-act="back"]');
@@ -207,6 +238,7 @@
 
   function renderForm() {
     const r = compute();
+    const TOTAL = total();
     app.innerHTML = `
       <div class="progress"><div style="width:${(TOTAL / (TOTAL + 1)) * 100}%"></div></div>
       <div class="step-label">TU RESULTADO</div>
@@ -288,7 +320,9 @@
 
       <div class="result-grid">
         <div><span>Leads que se enfrían al mes</span><strong>~${fmt(r.lost)}</strong></div>
-        <div><span>Oportunidad anual estimada</span><strong>${fmt(r.ufLow)}–${fmt(r.ufHigh)} UF</strong></div>
+        ${r.own
+          ? `<div><span>Ventas que se te escapan al año</span><strong>${fmtU(r.unitsLow)}–${fmtU(r.unitsHigh)} unidades</strong>${r.price ? `<small class="result-sub">≈ ${fmt(r.ufLow)}–${fmt(r.ufHigh)} UF en ventas</small>` : ''}</div>`
+          : `<div><span>Oportunidad anual estimada</span><strong>${fmt(r.ufLow)}–${fmt(r.ufHigh)} UF</strong></div>`}
       </div>
 
       ${r.weak.length ? `
