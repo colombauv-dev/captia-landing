@@ -27,10 +27,10 @@ if (chatBody) {
     { who: 'in',  t: 'Hola! Cuánto cuesta apuntarse?', h: '22:40' },
     { who: 'out', t: '¡Hola! 😊 Tenemos 8 clases al mes por 60 € y 10 clases al mes por 73 €. ¿Cuántos días a la semana te gustaría venir?', h: '22:40' },
     { who: 'in',  t: 'Unos 2 o 3, por la tarde', h: '22:41' },
-    { who: 'out', t: 'Entonces te encaja la de 10 clases. ¿Quieres venir a probar una clase gratis? Hay plaza el martes a las 19:00.', h: '22:41' },
-    { who: 'in',  t: 'Va, el martes me va bien', h: '22:42' },
-    { who: 'out', t: 'Hecho, te he reservado el martes a las 19:00. Trae ropa cómoda, toalla y agua, y llega 10 minutos antes.', h: '22:42' },
-    { who: 'in',  t: 'Genial, gracias!', h: '22:43' }
+    { who: 'out', t: 'Entonces te encaja la de 10 clases. ¿Te apetece venir a probar una clase gratis? Por la tarde hay clases a las 16:00 y a las 19:00.', h: '22:41' },
+    { who: 'in',  t: 'Sí! El martes a las 19:00 me iría bien', h: '22:42' },
+    { who: 'out', t: 'Perfecto. ¿Me dices tu nombre? Se lo paso a recepción para que te confirme la plaza del martes a las 19:00.', h: '22:42' },
+    { who: 'in',  t: 'Laura Soler, gracias!', h: '22:43' }
   ];
   const wait = ms => new Promise(r => setTimeout(r, ms));
   const add = el => { chatBody.appendChild(el); chatBody.scrollTop = chatBody.scrollHeight; };
@@ -56,7 +56,7 @@ if (chatBody) {
     await wait(700);
     const chip = document.createElement('div');
     chip.className = 'booked';
-    chip.innerHTML = ICONS.cal + ' Clase de prueba · martes 19:00';
+    chip.innerHTML = ICONS.cal + ' Prueba martes 19:00 · enviada a recepción';
     add(chip);
     await wait(6000);
     playChat();
