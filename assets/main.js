@@ -24,13 +24,13 @@ if (toggle && nav) {
 const chatBody = document.getElementById('chat-body');
 if (chatBody) {
   const CHAT = [
-    { who: 'in',  t: 'Hola, me interesa la casa que tienen disponible en Chicureo.', h: '21:02' },
-    { who: 'out', t: '¡Hola! En Chicureo tenemos casas disponibles desde 12.200 UF y 13.800 UF, ambas de 3 dormitorios. ¿Me indicas tu nombre y un contacto para registrar tu interés?', h: '21:02' },
-    { who: 'in',  t: 'Carlos Pérez, cperez@mail.com, me interesa la de 12.200 UF.', h: '21:03' },
-    { who: 'out', t: 'Excelente. ¿Cuentas con crédito hipotecario aprobado para este valor?', h: '21:03' },
-    { who: 'in',  t: 'Sí, ya lo tengo aprobado.', h: '21:04' },
-    { who: 'out', t: '¡Perfecto! Te propongo una visita para este lunes a las 9:00 AM para que conozcas la casa. ¿Te acomoda?', h: '21:04' },
-    { who: 'in',  t: 'A las 9:00 me va bien, Gracias', h: '21:05' }
+    { who: 'in',  t: 'Hola! Cuánto cuesta apuntarse?', h: '22:40' },
+    { who: 'out', t: '¡Hola! 😊 Tenemos 8 clases al mes por 60 € y 10 clases al mes por 73 €. ¿Cuántos días a la semana te gustaría venir?', h: '22:40' },
+    { who: 'in',  t: 'Unos 2 o 3, por la tarde', h: '22:41' },
+    { who: 'out', t: 'Entonces te encaja la de 10 clases. ¿Quieres venir a probar una clase gratis? Hay plaza el martes a las 19:00.', h: '22:41' },
+    { who: 'in',  t: 'Va, el martes me va bien', h: '22:42' },
+    { who: 'out', t: 'Hecho, te he reservado el martes a las 19:00. Trae ropa cómoda, toalla y agua, y llega 10 minutos antes.', h: '22:42' },
+    { who: 'in',  t: 'Genial, gracias!', h: '22:43' }
   ];
   const wait = ms => new Promise(r => setTimeout(r, ms));
   const add = el => { chatBody.appendChild(el); chatBody.scrollTop = chatBody.scrollHeight; };
@@ -56,7 +56,7 @@ if (chatBody) {
     await wait(700);
     const chip = document.createElement('div');
     chip.className = 'booked';
-    chip.innerHTML = ICONS.cal + ' Visita agendada · lunes 9:00';
+    chip.innerHTML = ICONS.cal + ' Clase de prueba · martes 19:00';
     add(chip);
     await wait(6000);
     playChat();
