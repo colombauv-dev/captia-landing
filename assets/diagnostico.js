@@ -1,15 +1,12 @@
 /* =========================================================
-   CAPTIA — Diagnóstico Minuto Uno (lead magnet)
+   captia — Diagnóstico Minuto Uno para gimnasios (lead magnet)
    Todo lo editable está en el objeto DIAG:
    - webhook: URL del "Inbound Webhook" del workflow de GHL
    - pdf: checklist que se descarga al final
    - questions: preguntas. En las de práctica, cada opción es
      [texto, puntos 0–3, factor para la estimación]
    - levels: textos del resultado según el puntaje
-   - assumptions: supuestos de la estimación en UF
-   - Preguntas con "when": solo se muestran si se cumple la condición
-     (la comisión es para corredoras; el precio por unidad, para
-     inmobiliarias que venden sus propios proyectos)
+   - assumptions: supuestos de la estimación en euros
    ========================================================= */
 (function () {
   const app = document.getElementById('diag-app');
@@ -25,84 +22,83 @@
     demo: '/confirmacion-leadflow-inmo',
 
     questions: [
-      { key: 'kind', type: 'data',
-        q: '¿Qué vende tu inmobiliaria?',
-        hint: 'Así calculamos bien cuánto te cuesta cada cliente que se va.',
-        opts: [['Mis propios proyectos (desarrollo o construyo)', 'own'], ['Propiedades de terceros (corretaje)', 'broker']] },
+      { key: 'members', type: 'data',
+        q: '¿Cuántos socios tiene tu gimnasio?',
+        hint: 'Socios activos que pagan cuota. Una estimación basta.',
+        opts: [['Menos de 300', 200], ['Entre 300 y 600', 450], ['Entre 600 y 1.000', 800], ['Entre 1.000 y 1.500', 1250], ['Más de 1.500', 1800]] },
 
       { key: 'leads', type: 'data',
-        q: '¿Cuántas consultas nuevas recibe tu inmobiliaria al mes?',
-        hint: 'Suma todos los canales: WhatsApp, Instagram, portales, web, correo. Una estimación basta.',
-        opts: [['Menos de 30', 20], ['Entre 30 y 75', 50], ['Entre 76 y 150', 110], ['Entre 151 y 300', 220], ['Más de 300', 400]] },
+        q: '¿Cuántas consultas de personas interesadas recibes al mes?',
+        hint: 'Suma WhatsApp, Instagram, correo, web y teléfono. Piensa en un mes normal, no en septiembre ni en enero.',
+        opts: [['Menos de 30', 20], ['Entre 30 y 75', 50], ['Entre 76 y 150', 110], ['Más de 150', 200]] },
 
       { key: 'speed', type: 'score',
-        q: 'En horario de oficina, ¿cuánto tarda la primera respuesta a una consulta nueva?',
+        q: 'En horario de recepción, ¿cuánto tarda la primera respuesta a una consulta?',
         hint: 'Piensa en un día normal, no en el mejor día.',
-        // factor = % de leads de horario hábil que se enfrían por demora
+        // factor = % de consultas en horario que se enfrían por demora
         opts: [['Menos de 1 minuto', 3, 0.05], ['Entre 1 y 5 minutos', 2, 0.12], ['Entre 5 minutos y 1 hora', 1, 0.25], ['Más de 1 hora', 0, 0.4], ['No lo sé', 0, 0.3]],
-        weak: 'Tu primera respuesta llega tarde. El interés de una consulta se enfría en minutos y el cliente sigue preguntando a otras inmobiliarias.', step: 2 },
+        weak: 'Tu primera respuesta llega tarde. Quien pregunta precios escribe a dos o tres gimnasios y se apunta en el que le contesta primero.', step: 2 },
 
       { key: 'offhours', type: 'score',
-        q: 'Si una consulta llega un domingo o a las 22:00, ¿qué pasa?',
+        q: 'Si alguien pregunta precios un domingo o a las 22:00, ¿qué pasa?',
         hint: '',
-        // factor = % de leads fuera de horario que se pierden
-        opts: [['Se responde al instante, de forma automática', 3, 0.05], ['Alguien de guardia la responde esa misma noche o día', 2, 0.2], ['Se responde el siguiente día hábil', 1, 0.5], ['A veces queda sin respuesta', 0, 0.75]],
-        weak: 'Las consultas de noche y fin de semana esperan hasta el día hábil siguiente. Es justo cuando la gente tiene tiempo para buscar casa.', step: 2 },
+        // factor = % de consultas fuera de horario que se pierden
+        opts: [['Se responde al momento, de forma automática', 3, 0.05], ['Alguien la contesta desde su móvil esa misma noche o día', 2, 0.2], ['Se responde al día siguiente o el lunes', 1, 0.5], ['A veces se queda sin respuesta', 0, 0.75]],
+        weak: 'Las consultas de noche y de fin de semana esperan hasta que abre la recepción. Es justo cuando la gente tiene tiempo para buscar gimnasio.', step: 2 },
 
-      { key: 'channels', type: 'score',
-        q: '¿Respondes igual de rápido en todos tus canales?',
-        hint: 'WhatsApp, Instagram, portales inmobiliarios, formulario web, correo.',
-        opts: [['Sí, todos con el mismo estándar', 3], ['WhatsApp sí, los demás van más lento', 1], ['Depende del día y del vendedor', 0]],
-        weak: 'Hay canales que se responden más lento. Un cliente que escribió por Instagram o un portal vale lo mismo que uno de WhatsApp.', step: 2 },
-
-      { key: 'qualify', type: 'score',
-        q: '¿Cómo distingues a un comprador real de un curioso?',
+      { key: 'trial', type: 'score',
+        q: 'Cuando alguien pregunta precios, ¿le propones una clase de prueba?',
         hint: '',
-        opts: [['Hacemos siempre las mismas preguntas clave en el primer contacto', 3], ['Cada vendedor lo intuye a su manera', 1], ['No filtramos, atendemos a todos igual', 0]],
-        weak: 'No filtras en el primer contacto. Tu equipo gasta el mismo tiempo en un curioso que en alguien con crédito aprobado.', step: 3 },
-
-      { key: 'record', type: 'score',
-        q: '¿Dónde queda registrado cada lead y lo que preguntó?',
-        hint: '',
-        opts: [['En un CRM, con etapas y responsable', 3], ['En una planilla que actualizamos', 2], ['En el WhatsApp de cada vendedor', 0], ['No queda registrado', 0]],
-        weak: 'La información de cada lead vive en el teléfono de un vendedor. Si se va o se le olvida, ese cliente se pierde.', step: 4 },
+        opts: [['Siempre, y se la reservamos en ese momento', 3], ['Se la proponemos, pero tiene que venir o llamar para reservarla', 2], ['Solo si la pide', 1], ['No ofrecemos clase de prueba', 0]],
+        weak: 'No conviertes la consulta en una clase de prueba. Quien pregunta precios está a un paso de venir, pero si no le reservas la prueba en ese momento, se enfría.', step: 3 },
 
       { key: 'followup', type: 'score',
-        q: 'Si un lead deja de responder, ¿cuántas veces lo vuelves a contactar?',
+        q: 'Si alguien hace la clase de prueba y no se apunta, ¿qué pasa?',
         hint: '',
-        opts: [['Tenemos una secuencia definida de 4 o más contactos', 3], ['Dos o tres veces, según el vendedor', 2], ['Una vez', 1], ['Ninguna, esperamos que vuelva', 0]],
-        weak: 'El seguimiento depende de cada vendedor. Muchas ventas se cierran después del tercer o cuarto contacto, no en el primero.', step: 5 },
+        opts: [['Le escribimos al día siguiente y tenemos una secuencia de seguimiento', 3], ['Le escribimos una vez', 2], ['Depende de quién esté en recepción', 1], ['Nada, esperamos que vuelva', 0]],
+        weak: 'No haces seguimiento después de la prueba. Muchas personas se apuntan después del segundo o tercer mensaje, no el mismo día.', step: 4 },
+
+      { key: 'churn', type: 'score',
+        q: 'Cuando un socio pide la baja, ¿qué hace tu equipo?',
+        hint: 'Por correo, en recepción o por WhatsApp.',
+        // factor = parte de las bajas recuperables que hoy se pierde
+        opts: [['Le responde, le ofrece una alternativa (pausa, otra tarifa) y anota el motivo', 3, 0], ['Le responde y tramita la baja, sin ofrecerle nada', 1, 0.8], ['Tramita la baja cuando puede; a veces tarda días en contestar', 0, 1]],
+        weak: 'Las bajas se tramitan sin un intento de retener al socio. Una pausa o una tarifa con menos clases puede bastar para que se quede.', step: 5 },
+
+      { key: 'reason', type: 'score',
+        q: '¿Sabes por qué se da de baja cada socio?',
+        hint: '',
+        opts: [['Sí, registramos el motivo de cada baja y lo revisamos', 3], ['Más o menos, lo comentamos en recepción', 1], ['No lo sabemos', 0]],
+        weak: 'No sabes por qué se van tus socios, así que no puedes corregir lo que los está echando: precio, horarios o el servicio.', step: 5 },
 
       { key: 'measure', type: 'score',
-        q: '¿Sabes qué porcentaje de tus consultas termina en una visita agendada?',
+        q: '¿Sabes cuántas consultas acaban en clase de prueba y cuántas pruebas en alta?',
         hint: '',
         opts: [['Sí, lo medimos todos los meses', 3], ['Más o menos, a ojo', 1], ['No lo medimos', 0]],
-        weak: 'No mides cuántas consultas llegan a visita, así que no sabes dónde se te van ni si una mejora funciona.', step: 1 },
+        weak: 'No mides cuántas consultas acaban en alta, así que no sabes dónde se te escapan ni si una mejora funciona.', step: 1 },
 
-      { key: 'comm', type: 'data', when: () => kind() === 'broker',
-        q: '¿Cuál es la comisión promedio por venta, en UF?',
-        hint: 'Lo que gana tu inmobiliaria por cada propiedad vendida.',
-        opts: [['Menos de 50 UF', 35], ['Entre 50 y 100 UF', 70], ['Entre 100 y 200 UF', 140], ['Más de 200 UF', 250], ['Prefiero no decirlo', 70]] },
-
-      { key: 'price', type: 'data', when: () => kind() === 'own',
-        q: '¿Cuál es el precio promedio de las unidades que vendes?',
-        hint: 'Una estimación basta. Si prefieres no decirlo, te mostramos solo las unidades.',
-        opts: [['Menos de 2.500 UF', 2000], ['Entre 2.500 y 4.000 UF', 3250], ['Entre 4.000 y 6.000 UF', 5000], ['Entre 6.000 y 10.000 UF', 8000], ['Más de 10.000 UF', 12000], ['Prefiero no decirlo', null]] }
+      { key: 'fee', type: 'data',
+        q: '¿Cuál es la cuota media de tus socios?',
+        hint: 'Lo que paga al mes un socio típico.',
+        opts: [['Menos de 40 €', 35], ['Entre 40 y 60 €', 50], ['Entre 60 y 80 €', 70], ['Entre 80 y 100 €', 90], ['Más de 100 €', 110]] }
     ],
 
     levels: [
-      { min: 70, tag: 'Cerca del Minuto Uno', title: 'Tu inmobiliaria ya está cerca del minuto uno.',
-        text: 'Tienes buena parte del proceso resuelto. Lo que queda por ganar está en los detalles: noches, fines de semana y seguimiento constante.' },
-      { min: 40, tag: 'Fuga media', title: 'Se te están escapando clientes en puntos concretos.',
-        text: 'Tienes algunas buenas prácticas, pero hay huecos claros donde los leads se enfrían antes de llegar a una visita.' },
-      { min: 0, tag: 'Fuga alta', title: 'Estás perdiendo clientes antes de hablar con ellos.',
-        text: 'Hoy la respuesta depende de quién esté disponible. Ordenar estos puntos es la forma más rápida de conseguir más visitas sin gastar más en publicidad.' }
+      { min: 70, tag: 'Cerca del Minuto Uno', title: 'Tu recepción ya está cerca del minuto uno.',
+        text: 'Tienes buena parte resuelta. Lo que queda por ganar está en los detalles: noches, fines de semana, el seguimiento después de la prueba y las bajas.' },
+      { min: 40, tag: 'Fuga media', title: 'Se te escapan socios en puntos concretos.',
+        text: 'Tienes algunas buenas prácticas, pero hay huecos claros donde las consultas se enfrían y las bajas se van sin un intento de retenerlas.' },
+      { min: 0, tag: 'Fuga alta', title: 'Estás perdiendo socios antes de hablar con ellos.',
+        text: 'Hoy la respuesta depende de quién esté en recepción. Ordenar estos puntos es la forma más rápida de conseguir más altas y perder menos socios, sin gastar más en publicidad.' }
     ],
 
     assumptions: {
-      offShare: 0.5,       // parte de las consultas que llega fuera de horario (conservador)
-      visitRate: 0.08,     // de cada lead recuperado, cuántos llegan a visita
-      visitToSale: 0.2,    // de cada visita, cuántas terminan en venta
+      offShare: 0.5,        // parte de las consultas que llega fuera del horario de recepción
+      leadToMember: 0.15,   // de cada consulta bien atendida, cuántas acaban en alta
+      newMemberMonths: 6,   // meses que se queda de media un socio nuevo
+      monthlyChurn: 0.04,   // bajas al mes sobre el total de socios (4–6 % en gimnasios tradicionales)
+      saveRate: 0.10,       // de cada baja, cuántas se quedan con una oferta
+      savedMonths: 3,       // meses extra que se queda un socio retenido
       followupBoost: [0.25, 0.15, 0.08, 0] // pérdida extra por falta de seguimiento, según puntos 0–3
     }
   };
@@ -110,18 +106,15 @@
   const SCORE_QS = DIAG.questions.filter(q => q.type === 'score');
   const ALL = DIAG.questions;
   let answers = {};
-  // tipo de inmobiliaria elegido en la pregunta 1 ('own' o 'broker'); por defecto, propios
-  const kind = () => (answers.kind === undefined ? 'own' : ALL[0].opts[answers.kind][1]);
-  const qs = () => ALL.filter(q => !q.when || q.when());
+  const qs = () => ALL;
   const total = () => qs().length;
   let step = -1;              // -1 = portada
   let contact = null;
 
-  const fmt = n => Math.round(n).toLocaleString('es-CL');
+  // formato de España con punto de miles también en cifras de 4 dígitos (6.350)
+  const fmt = n => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const opt = key => { const Q = ALL.find(q => q.key === key); return Q.opts[answers[key]]; };
-  // cifras chicas con un decimal (1,5 unidades); las grandes, redondeadas
-  const fmtU = n => n < 10 ? (Math.round(n * 10) / 10).toLocaleString('es-CL') : fmt(n);
 
   /* ---------- Cálculos ---------- */
   function compute() {
@@ -130,31 +123,33 @@
     const level = DIAG.levels.find(l => score >= l.min);
 
     const A = DIAG.assumptions;
+    const fee = opt('fee')[1];
+    // 1) Altas que se pierden por responder tarde o no hacer seguimiento
     const leads = opt('leads')[1];
     const slow = opt('speed')[2];
     const offLoss = opt('offhours')[2];
     const extra = A.followupBoost[opt('followup')[1]];
     const lostRate = Math.min(0.85, (1 - A.offShare) * slow + A.offShare * offLoss + extra);
-    const lost = leads * lostRate;
-    const visits = lost * A.visitRate;
-    const salesYear = visits * A.visitToSale * 12;
-    const own = kind() === 'own';
-    const price = own ? opt('price')[1] : null;
-    const ufYear = own ? (price ? salesYear * price : 0) : salesYear * opt('comm')[1];
+    const lost = leads * lostRate;                       // consultas que se enfrían al mes
+    const lostJoins = lost * A.leadToMember;             // altas perdidas al mes
+    const eurJoins = lostJoins * 12 * fee * A.newMemberMonths;
+    // 2) Bajas que se van sin un intento de retenerlas
+    const members = opt('members')[1];
+    const savable = members * A.monthlyChurn * A.saveRate * opt('churn')[2]; // socios retenibles al mes
+    const eurChurn = savable * 12 * fee * A.savedMonths;
 
+    const eurYear = eurJoins + eurChurn;
     const weak = SCORE_QS
       .map(q => ({ q, pts: opt(q.key)[1] }))
       .filter(x => x.pts < 3)
       .sort((a, b) => a.pts - b.pts)
       .slice(0, 3);
 
-    const r = { score, level, lost, visits, own, price,
-      unitsLow: salesYear * 0.7, unitsHigh: salesYear * 1.3,
-      ufLow: ufYear * 0.7, ufHigh: ufYear * 1.3, weak };
+    const r = { score, level, lost, weak,
+      joinsYear: lostJoins * 12, savedYear: savable * 12,
+      eurLow: eurYear * 0.7, eurHigh: eurYear * 1.3 };
     // texto de la estimación, igual en la web y en el correo
-    r.estimate = own
-      ? fmtU(r.unitsLow) + '–' + fmtU(r.unitsHigh) + ' unidades al año' + (price ? ' (' + fmt(r.ufLow) + '–' + fmt(r.ufHigh) + ' UF en ventas)' : '')
-      : fmt(r.ufLow) + '–' + fmt(r.ufHigh) + ' UF';
+    r.estimate = fmt(r.eurLow) + '–' + fmt(r.eurHigh) + ' €';
     return r;
   }
 
@@ -171,7 +166,7 @@
       diag_nivel: r.level.tag,
       diag_leads_perdidos_mes: Math.round(r.lost),
       diag_uf_anual: r.estimate,
-      diag_tipo: r.own ? 'Proyectos propios' : 'Corretaje',
+      diag_tipo: 'Gimnasio · ' + opt('members')[0] + ' socios',
       diag_puntos_fuga: r.weak.map(w => w.q.q).join(' | '),
       diag_respuestas: qs().map(q => q.key + ': ' + opt(q.key)[0]).join(' | '),
       pagina: location.href
@@ -197,12 +192,12 @@
   function renderStart() {
     app.innerHTML = `
       <div class="step-label">DIAGNÓSTICO MINUTO UNO · GRATIS</div>
-      <div class="q-title">¿Tu inmobiliaria responde en el minuto uno?</div>
-      <div class="q-hint">10 preguntas sobre cómo atiendes cada consulta. Toma 2 minutos y al final recibes:</div>
+      <div class="q-title">¿Tu gimnasio responde en el minuto uno?</div>
+      <div class="q-hint">10 preguntas sobre cómo atiendes las consultas y las bajas. Toma 2 minutos y al final recibes:</div>
       <div class="options diag-start">
         <div class="option diag-get"><span class="diag-get-num">0–100</span><span>Tu puntaje Minuto Uno</span></div>
-        <div class="option diag-get"><span class="diag-get-num">Top 3</span><span>Dónde se te escapan los clientes</span></div>
-        <div class="option diag-get"><span class="diag-get-num">UF</span><span>Cuánto te cuesta al año responder tarde</span></div>
+        <div class="option diag-get"><span class="diag-get-num">Top 3</span><span>Dónde se te escapan los socios</span></div>
+        <div class="option diag-get"><span class="diag-get-num">€</span><span>Cuánto te cuesta al año</span></div>
         <div class="option diag-get"><span class="diag-get-num">PDF</span><span>Checklist con plantillas para copiar y pegar</span></div>
       </div>
       <div class="calc-nav"><span></span><button class="btn" data-act="start">Empezar diagnóstico</button></div>`;
@@ -253,18 +248,18 @@
       <div class="diag-locked" aria-hidden="true">
         <div class="diag-locked-content">
           <div class="result-grid">
-            <div><span>Leads que se enfrían al mes</span><strong>~00</strong></div>
-            <div><span>Oportunidad anual estimada</span><strong>000–000 UF</strong></div>
+            <div><span>Consultas que se enfrían al mes</span><strong>~00</strong></div>
+            <div><span>Lo que pierdes al año</span><strong>0.000–0.000 €</strong></div>
           </div>
           <div class="diag-weak">
             <div class="step-label" style="margin-bottom:10px">TUS PUNTOS DE FUGA</div>
-            <div class="weak-item"><b>1</b><p>Tu primera respuesta llega tarde y el cliente sigue preguntando a otras inmobiliarias.</p></div>
-            <div class="weak-item"><b>2</b><p>Las consultas de noche y fin de semana esperan hasta el siguiente día hábil.</p></div>
+            <div class="weak-item"><b>1</b><p>Tu primera respuesta llega tarde y la persona se apunta en otro gimnasio.</p></div>
+            <div class="weak-item"><b>2</b><p>Las bajas se tramitan sin un intento de retener al socio.</p></div>
           </div>
         </div>
         <div class="diag-lock-badge">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-          Cuántos leads pierdes, cuánto te cuesta en UF y tus 3 puntos de fuga
+          Cuántas consultas se te enfrían, cuánto te cuesta en euros y tus 3 puntos de fuga
         </div>
       </div>
 
@@ -273,10 +268,10 @@
         <div class="q-hint">Te mostramos el resto del resultado aquí mismo y te enviamos el Checklist Minuto Uno en PDF.</div>
       </div>
       <form class="diag-form" novalidate>
-        <label>Nombre<input name="name" autocomplete="name" required placeholder="Cristián Molina"></label>
-        <label>Correo<input name="email" type="email" autocomplete="email" required placeholder="cristian@inmobiliaria.cl"></label>
-        <label>WhatsApp<input name="phone" type="tel" autocomplete="tel" required placeholder="+56 9 1234 5678"></label>
-        <label class="diag-consent"><input type="checkbox" name="ok" required> Acepto la <a href="/privacidad" target="_blank">política de privacidad</a> y recibir el resultado y comunicaciones de Captia.</label>
+        <label>Nombre<input name="name" autocomplete="name" required placeholder="Marta Puig"></label>
+        <label>Correo<input name="email" type="email" autocomplete="email" required placeholder="marta@tugimnasio.com"></label>
+        <label>WhatsApp<input name="phone" type="tel" autocomplete="tel" required placeholder="+34 600 00 00 00"></label>
+        <label class="diag-consent"><input type="checkbox" name="ok" required> Acepto la <a href="/privacidad" target="_blank">política de privacidad</a> y recibir el resultado y comunicaciones de captia.</label>
         <p class="diag-error" hidden></p>
         <div class="calc-nav">
           <button type="button" class="btn-ghost" data-act="back">Atrás</button>
@@ -319,10 +314,8 @@
       </div>
 
       <div class="result-grid">
-        <div><span>Leads que se enfrían al mes</span><strong>~${fmt(r.lost)}</strong></div>
-        ${r.own
-          ? `<div><span>Ventas que se te escapan al año</span><strong>${fmtU(r.unitsLow)}–${fmtU(r.unitsHigh)} unidades</strong>${r.price ? `<small class="result-sub">≈ ${fmt(r.ufLow)}–${fmt(r.ufHigh)} UF en ventas</small>` : ''}</div>`
-          : `<div><span>Oportunidad anual estimada</span><strong>${fmt(r.ufLow)}–${fmt(r.ufHigh)} UF</strong></div>`}
+        <div><span>Consultas que se enfrían al mes</span><strong>~${fmt(r.lost)}</strong></div>
+        <div><span>Lo que pierdes al año</span><strong>${r.estimate}</strong><small class="result-sub">≈ ${fmt(r.joinsYear)} altas perdidas${r.savedYear >= 1 ? ` y ${fmt(r.savedYear)} bajas sin intento de retención` : ''} al año</small></div>
       </div>
 
       ${r.weak.length ? `
@@ -335,7 +328,7 @@
 
       <div class="diag-actions">
         <a class="btn-ghost" href="${DIAG.pdf}" target="_blank" rel="noopener">Descargar checklist (PDF)</a>
-        <a class="btn" href="${DIAG.demo}">Ver cómo Captia lo resuelve</a>
+        <a class="btn" href="${DIAG.demo}">Ver cómo lo resuelve captia</a>
       </div>
       <p class="diag-note">También te lo enviamos a <b>${esc(contact.email)}</b>.</p>`;
   }

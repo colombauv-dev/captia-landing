@@ -2,70 +2,60 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Checklist Minuto Uno · Captia</title>
+<title>Checklist Minuto Uno · captia</title>
 <!-- Fuente del PDF assets/checklist-minuto-uno.pdf. Para regenerarlo: node lead-magnet/build-pdf.js -->
 <style>
   @font-face { font-family: "Sora"; src: url("fonts/sora.woff2") format("woff2"); font-weight: 100 800; unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
   @font-face { font-family: "Sora"; src: url("fonts/sora-ext.woff2") format("woff2"); font-weight: 100 800; }
   @page { size: A4; margin: 0; }
-  :root { --verde:#2a3c2b; --verde-2:#34493a; --crema:#f3efe8; --crema-2:#faf8f3; --tinta:#231f20; --gris:#6b6862; --lima:#defc92; --coral:#ee6e4f; --borde:#e4ded2; }
+  :root { --onyx:#0b0b0b; --carbon:#19191a; --marfil:#f4f1ea; --humo:#8a8884; --grafito:#66635e; --lima:#defc94; --linea:#e2ddd2; --blanco:#fbfaf6; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: "Sora", Arial, sans-serif; color: var(--tinta); font-size: 10.5pt; line-height: 1.55; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .page { width: 210mm; height: 297mm; padding: 18mm 18mm 16mm; position: relative; overflow: hidden; background: var(--crema-2); page-break-after: always; }
+  body { font-family: "Sora", Arial, sans-serif; color: var(--onyx); font-size: 10.5pt; line-height: 1.55; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page { width: 210mm; height: 297mm; padding: 18mm 18mm 16mm; position: relative; overflow: hidden; background: var(--marfil); page-break-after: always; }
   .page:last-child { page-break-after: auto; }
-  .logo { font-weight: 600; font-size: 15pt; letter-spacing: -0.03em; color: var(--verde); }
+  .logo { font-weight: 600; font-size: 15pt; letter-spacing: -0.03em; color: var(--onyx); }
   .logo sup { font-size: 7pt; }
   .dark .logo { color: var(--lima); }
-  .foot { position: absolute; left: 18mm; right: 18mm; bottom: 10mm; display: flex; justify-content: space-between; font-size: 7.5pt; color: var(--gris); border-top: 1px solid var(--borde); padding-top: 3mm; }
-  .mono { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 7.5pt; font-weight: 700; letter-spacing: .1em; color: var(--gris); text-transform: uppercase; }
+  .foot { position: absolute; left: 18mm; right: 18mm; bottom: 10mm; display: flex; justify-content: space-between; font-size: 7.5pt; color: var(--grafito); border-top: 1px solid var(--linea); padding-top: 3mm; }
   h1 { font-size: 34pt; line-height: 1.05; letter-spacing: -0.03em; font-weight: 600; }
-  h2 { font-size: 19pt; line-height: 1.15; letter-spacing: -0.02em; font-weight: 600; margin: 2mm 0 3mm; }
+  h2 { font-size: 18pt; line-height: 1.15; letter-spacing: -0.02em; font-weight: 600; margin: 2mm 0 3mm; }
   h3 { font-size: 11.5pt; font-weight: 600; margin: 5mm 0 2mm; }
   p { margin-bottom: 2.5mm; }
-  .muted { color: var(--gris); }
-
-  /* Portada */
-  .cover { background: var(--verde); color: var(--crema); display: flex; flex-direction: column; }
-  .cover .pill { display: inline-block; border: 1px solid rgba(222,252,146,.4); color: var(--crema); border-radius: 99px; padding: 1.5mm 4mm; font-size: 8.5pt; margin: 40mm 0 8mm; }
+  .muted { color: var(--grafito); }
+  .cover { background: var(--onyx); color: var(--marfil); display: flex; flex-direction: column; }
+  .cover .pill { display: inline-block; border: 1px solid rgba(222,252,148,.4); color: var(--marfil); border-radius: 99px; padding: 1.5mm 4mm; font-size: 8.5pt; margin: 40mm 0 8mm; }
   .cover h1 span { color: var(--lima); }
-  .cover .sub { font-size: 13pt; color: rgba(243,239,232,.82); margin-top: 8mm; max-width: 150mm; }
+  .cover .sub { font-size: 13pt; color: rgba(244,241,234,.82); margin-top: 8mm; max-width: 150mm; }
   .cover .steps { margin-top: auto; display: grid; grid-template-columns: repeat(5, 1fr); gap: 3mm; }
-  .cover .steps div { background: var(--verde-2); border-radius: 3mm; padding: 4mm; font-size: 8.5pt; color: rgba(243,239,232,.85); min-height: 26mm; }
+  .cover .steps div { background: var(--carbon); border-radius: 3mm; padding: 4mm; font-size: 8.5pt; color: rgba(244,241,234,.85); min-height: 26mm; }
   .cover .steps b { display: block; font-family: ui-monospace, Menlo, monospace; color: var(--lima); font-size: 14pt; margin-bottom: 1.5mm; }
-  .cover .foot { color: rgba(243,239,232,.55); border-color: rgba(255,255,255,.12); }
-
-  /* Pasos */
+  .cover .foot, .closing .foot { color: var(--humo); border-color: rgba(255,255,255,.12); }
   .step-head { display: flex; align-items: center; gap: 4mm; margin-top: 8mm; }
   .step-head:first-of-type { margin-top: 6mm; }
-  .num { width: 11mm; height: 11mm; border-radius: 50%; background: var(--verde); color: var(--lima); display: grid; place-items: center; font-weight: 700; font-size: 12pt; flex-shrink: 0; }
+  .num { width: 11mm; height: 11mm; border-radius: 50%; background: var(--onyx); color: var(--lima); display: grid; place-items: center; font-weight: 700; font-size: 12pt; flex-shrink: 0; }
   .step-head h2 { margin: 0; }
-  .time { margin-left: auto; font-size: 8pt; background: #e8e2d6; border-radius: 99px; padding: 1mm 3mm; white-space: nowrap; }
+  .time { margin-left: auto; font-size: 8pt; background: #e6e1d6; border-radius: 99px; padding: 1mm 3mm; white-space: nowrap; }
   .checks { list-style: none; margin: 3mm 0 0; }
   .checks li { position: relative; padding-left: 7mm; margin-bottom: 2mm; }
-  .checks li::before { content: ""; position: absolute; left: 0; top: 1.2mm; width: 3.6mm; height: 3.6mm; border: 1.4px solid var(--verde); border-radius: 1mm; background: #fff; }
-  .box { background: #fff; border: 1px solid var(--borde); border-radius: 3mm; padding: 4mm 5mm; margin: 3mm 0; }
-  .msg { background: #fff; border: 1px solid var(--borde); border-left: 3px solid var(--coral); border-radius: 2mm; padding: 3mm 4mm; margin: 2.5mm 0; font-size: 9.5pt; }
-  .msg .lbl { display: block; font-size: 7.5pt; font-weight: 700; color: var(--gris); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 1mm; }
-  table { width: 100%; border-collapse: collapse; font-size: 9pt; margin: 3mm 0; background: #fff; }
-  th, td { border: 1px solid var(--borde); padding: 2mm 2.5mm; text-align: left; vertical-align: top; }
-  th { background: var(--verde); color: var(--crema); font-weight: 600; font-size: 8.5pt; }
-  .formula { font-family: ui-monospace, Menlo, monospace; font-size: 9pt; background: var(--crema); border-radius: 2mm; padding: 2.5mm 3.5mm; display: block; margin: 2mm 0; }
-  table.tight { table-layout: fixed; font-size: 7.5pt; }
-  table.tight th, table.tight td { padding: 1.5mm 1.2mm; font-size: 7.3pt; word-break: break-word; }
+  .checks li::before { content: ""; position: absolute; left: 0; top: 1.2mm; width: 3.6mm; height: 3.6mm; border: 1.4px solid var(--onyx); border-radius: 1mm; background: var(--blanco); }
+  .box { background: var(--blanco); border: 1px solid var(--linea); border-radius: 3mm; padding: 4mm 5mm; margin: 3mm 0; }
+  .msg { background: var(--blanco); border: 1px solid var(--linea); border-left: 3px solid var(--onyx); border-radius: 2mm; padding: 3mm 4mm; margin: 2.5mm 0; font-size: 9.5pt; }
+  .msg .lbl { display: block; font-size: 7.5pt; font-weight: 700; color: var(--grafito); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 1mm; }
+  table { width: 100%; border-collapse: collapse; font-size: 9pt; margin: 3mm 0; background: var(--blanco); }
+  th, td { border: 1px solid var(--linea); padding: 2mm 2.5mm; text-align: left; vertical-align: top; }
+  th { background: var(--onyx); color: var(--marfil); font-weight: 600; font-size: 8.5pt; }
+  .formula { font-family: ui-monospace, Menlo, monospace; font-size: 9pt; background: #e9e4d9; border-radius: 2mm; padding: 2.5mm 3.5mm; display: block; margin: 2mm 0; }
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
-
-  /* Cierre */
-  .closing { background: var(--verde); color: var(--crema); }
+  .closing { background: var(--onyx); color: var(--marfil); }
   .closing h1 { font-size: 28pt; margin-top: 30mm; }
   .closing h1 span { color: var(--lima); }
-  .closing p { color: rgba(243,239,232,.82); font-size: 11.5pt; max-width: 155mm; }
+  .closing p { color: rgba(244,241,234,.82); font-size: 11.5pt; max-width: 155mm; }
   .closing .cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; margin: 10mm 0; }
-  .closing .cmp div { background: var(--verde-2); border-radius: 3mm; padding: 6mm; font-size: 9.5pt; }
+  .closing .cmp div { background: var(--carbon); border-radius: 3mm; padding: 6mm; font-size: 9.5pt; }
   .closing .cmp h3 { color: var(--lima); margin: 0 0 3mm; }
-  .closing .cmp ul { padding-left: 4mm; color: rgba(243,239,232,.85); }
+  .closing .cmp ul { padding-left: 4mm; color: rgba(244,241,234,.85); }
   .closing .cmp li { margin-bottom: 1.5mm; }
-  .cta { display: inline-block; background: var(--coral); color: var(--tinta); font-weight: 600; padding: 4mm 7mm; border-radius: 3mm; font-size: 12pt; margin-top: 4mm; }
-  .closing .foot { color: rgba(243,239,232,.55); border-color: rgba(255,255,255,.12); }
+  .cta { display: inline-block; background: var(--marfil); color: var(--onyx); font-weight: 600; padding: 4mm 7mm; border-radius: 3mm; font-size: 12pt; margin-top: 4mm; text-decoration: none; }
 </style>
 </head>
 <body>
@@ -73,45 +63,46 @@
 <!-- ============ PORTADA ============ -->
 <section class="page cover">
   <div class="logo">captia<sup>✦</sup></div>
-  <div><span class="pill">Checklist gratuito para inmobiliarias</span></div>
+  <div><span class="pill">Checklist gratuito para gimnasios y estudios</span></div>
   <h1>Checklist <span>Minuto Uno</span></h1>
-  <p class="sub">5 pasos para dejar de perder clientes por responder tarde. Con plantillas listas para copiar y pegar en WhatsApp, Instagram y correo.</p>
+  <p class="sub">5 pasos para que ninguna consulta se quede sin respuesta y ninguna baja se vaya sin un intento de retenerla. Con plantillas listas para copiar y pegar en WhatsApp, Instagram y correo.</p>
   <div class="steps">
     <div><b>01</b>Mide tu punto de partida</div>
     <div><b>02</b>Responde en el minuto uno, en todos tus canales</div>
-    <div><b>03</b>Filtra con 3 preguntas</div>
-    <div><b>04</b>Un solo lugar para cada lead</div>
-    <div><b>05</b>Seguimiento con plan</div>
+    <div><b>03</b>Convierte cada consulta en una clase de prueba</div>
+    <div><b>04</b>Seguimiento de la prueba</div>
+    <div><b>05</b>Cada baja con respuesta, oferta y motivo</div>
   </div>
-  <div class="foot"><span>captialab.com</span><span>Diagnóstico Minuto Uno · Captia</span></div>
+  <div class="foot"><span>captialab.com</span><span>Diagnóstico Minuto Uno · captia</span></div>
 </section>
 
 <!-- ============ PASOS 1 y 2 ============ -->
 <section class="page">
   <div class="logo">captia<sup>✦</sup></div>
-  <p class="muted" style="margin-top:6mm">Cómo usar este checklist: haz un paso por día. En una semana tendrás el proceso ordenado y vas a saber, con números, si mejoró.</p>
+  <p class="muted" style="margin-top:6mm">Cómo usar este checklist: haz un paso por día. En una semana tendrás la recepción ordenada y sabrás, con números, si ha mejorado.</p>
 
   <div class="step-head"><div class="num">1</div><h2>Mide tu punto de partida</h2><span class="time">15 minutos</span></div>
   <p>Si no lo mides, no sabes si mejora. Toma los últimos 30 días y anota:</p>
   <ul class="checks">
-    <li>Cuántas consultas nuevas llegaron, sumando todos los canales.</li>
+    <li>Cuántas consultas de personas interesadas llegaron, sumando todos los canales.</li>
     <li>Cuánto tardó la primera respuesta en 10 consultas al azar (mira la hora del mensaje y la de la respuesta).</li>
-    <li>Cuántas de esas consultas llegaron de noche o en fin de semana.</li>
-    <li>Cuántas terminaron en una visita agendada.</li>
+    <li>Cuántas llegaron de noche, en fin de semana o en festivo.</li>
+    <li>Cuántas acabaron en clase de prueba y cuántas pruebas acabaron en alta.</li>
+    <li>Cuántos socios pidieron la baja y por qué.</li>
   </ul>
-  <span class="formula">Tasa de visita = visitas agendadas ÷ consultas recibidas × 100</span>
+  <span class="formula">Conversión = altas del mes ÷ consultas recibidas × 100</span>
   <p class="muted">Repite la misma medición dentro de 30 días para comparar.</p>
 
   <div class="step-head"><div class="num">2</div><h2>Responde en el minuto uno, en todos tus canales</h2><span class="time">30 minutos</span></div>
-  <p>El primer mensaje no tiene que cerrar nada: solo tiene que llegar antes que el de la competencia y abrir la conversación.</p>
+  <p>El primer mensaje no tiene que vender nada: solo tiene que llegar antes que el del gimnasio de al lado y dar la información que piden.</p>
   <ul class="checks">
-    <li><b>WhatsApp Business:</b> activa el mensaje de bienvenida y el mensaje de ausencia (Herramientas para la empresa).</li>
-    <li><b>Instagram:</b> crea respuestas guardadas y activa las preguntas frecuentes en los mensajes directos.</li>
-    <li><b>Portales y formulario web:</b> que cada consulta llegue con aviso al celular de alguien, no solo a un correo que nadie revisa.</li>
-    <li>Define quién responde fuera de horario: un turno de guardia o un sistema automático.</li>
+    <li><b>WhatsApp Business:</b> activa el mensaje de bienvenida y el de ausencia (Herramientas para la empresa).</li>
+    <li><b>Instagram:</b> crea respuestas guardadas con tarifas y horarios, y activa las preguntas frecuentes en los mensajes directos.</li>
+    <li><b>Correo, web y Google:</b> que cada consulta avise al móvil de alguien, no solo a un buzón que nadie mira.</li>
+    <li>Decide quién responde fuera del horario de recepción: un turno o un sistema automático.</li>
   </ul>
-  <div class="msg"><span class="lbl">Plantilla · Bienvenida</span>¡Hola! Gracias por escribir a [INMOBILIARIA]. Para ayudarte mejor, ¿me cuentas qué proyecto o propiedad te interesa? Ya te comparto la información 🙂</div>
-  <div class="msg"><span class="lbl">Plantilla · Fuera de horario</span>¡Hola! Recibimos tu consulta. Mañana desde las 9:00 te escribe un ejecutivo con toda la información. Mientras, ¿me cuentas qué proyecto te interesa y para cuándo lo buscas?</div>
+  <div class="msg"><span class="lbl">Plantilla · Bienvenida con precios</span>¡Hola! Gracias por escribir a [GIMNASIO]. Tenemos [TARIFA 1] por [PRECIO] y [TARIFA 2] por [PRECIO], sin permanencia. ¿Cuántos días a la semana te gustaría venir?</div>
+  <div class="msg"><span class="lbl">Plantilla · Fuera de horario</span>¡Hola! Ya tenemos tu mensaje. Mañana a partir de las 9:00 te escribimos desde recepción. Mientras tanto, ¿qué horario te iría mejor para entrenar: mañana, mediodía o tarde?</div>
 
   <div class="foot"><span>captialab.com</span><span>2</span></div>
 </section>
@@ -120,30 +111,27 @@
 <section class="page">
   <div class="logo">captia<sup>✦</sup></div>
 
-  <div class="step-head"><div class="num">3</div><h2>Filtra con 3 preguntas</h2><span class="time">Se integra a tu respuesta</span></div>
-  <p>Que todo tu equipo haga las mismas 3 preguntas en el primer contacto. Con eso sabes a quién priorizar hoy.</p>
+  <div class="step-head"><div class="num">3</div><h2>Convierte cada consulta en una clase de prueba</h2><span class="time">Se integra a tu respuesta</span></div>
+  <p>Quien pregunta precios está a un paso de venir. Con dos preguntas sabes qué tarifa le encaja, y en el mismo mensaje le propones la prueba con dos horarios.</p>
   <table>
-    <tr><th style="width:38%">Pregunta</th><th>Qué te dice</th></tr>
-    <tr><td>¿La buscas para vivir o para invertir?</td><td>Qué tipo de propiedad y qué argumentos le importan.</td></tr>
-    <tr><td>¿Para cuándo la necesitas?</td><td>Urgencia: este mes, este año o "estoy mirando".</td></tr>
-    <tr><td>¿Tienes crédito hipotecario preaprobado o el pie disponible?</td><td>Si puede comprar ahora.</td></tr>
+    <tr><th style="width:42%">Pregunta</th><th>Qué te dice</th></tr>
+    <tr><td>¿Cuántos días a la semana te gustaría venir?</td><td>Qué tarifa recomendarle.</td></tr>
+    <tr><td>¿Qué horario te va mejor: mañana, mediodía o tarde?</td><td>Qué clases proponerle para la prueba.</td></tr>
   </table>
-  <div class="grid2">
-    <div class="box"><b>Prioridad alta</b><br><span class="muted">Responde las 3, tiene plazo concreto y financiamiento. Se le propone visita en esa misma conversación.</span></div>
-    <div class="box"><b>Seguimiento</b><br><span class="muted">Le falta plazo o financiamiento. Entra a la secuencia del paso 5.</span></div>
-  </div>
-  <div class="msg"><span class="lbl">Plantilla · Calificación</span>¡Perfecto! Para mostrarte las opciones que mejor te calzan: ¿la buscas para vivir o para invertir? ¿Para cuándo te gustaría cambiarte? ¿Ya tienes crédito preaprobado o estás recién viéndolo?</div>
+  <div class="msg"><span class="lbl">Plantilla · Propuesta de prueba</span>Entonces te encaja la tarifa de [TARIFA]. ¿Quieres venir a probar una clase gratis? Tengo plaza el [DÍA] a las [HORA] o el [DÍA] a las [HORA].</div>
 
-  <div class="step-head"><div class="num">4</div><h2>Un solo lugar para cada lead</h2><span class="time">20 minutos</span></div>
-  <p>Si la información vive en el WhatsApp de cada vendedor, cuando alguien se va o se olvida, el cliente se pierde. Arma una planilla compartida (o un CRM) con estas columnas:</p>
-  <table class="tight">
-    <tr><th>Fecha</th><th>Nombre</th><th>Teléfono</th><th>Canal</th><th>Proyecto</th><th>Uso</th><th>Plazo</th><th>Financ.</th><th>Resp.</th><th>Estado</th></tr>
-    <tr><td>03/11</td><td>Carla R.</td><td>+56 9…</td><td>Instagram</td><td>Ñuñoa 2D</td><td>Vivir</td><td>3 meses</td><td>Preaprob.</td><td>Juan</td><td>Visita agendada</td></tr>
+  <div class="step-head"><div class="num">4</div><h2>Seguimiento de la prueba</h2><span class="time">5 minutos por persona</span></div>
+  <p>Que alguien no venga o no se apunte el mismo día no significa que no le interese. Define una secuencia que no dependa de quién esté en recepción.</p>
+  <table>
+    <tr><th style="width:24%">Cuándo</th><th>Qué enviar</th></tr>
+    <tr><td>24 h y 2 h antes</td><td>Recordatorio de la clase de prueba.</td></tr>
+    <tr><td>Si no vino</td><td>A las 2 h, un mensaje para volver a agendar.</td></tr>
+    <tr><td>Día siguiente</td><td>Si vino y no se apuntó: cómo le fue y una razón para apuntarse ya.</td></tr>
+    <tr><td>Día 3</td><td>Algo nuevo: una clase que le puede gustar o un horario que encaja.</td></tr>
+    <tr><td>Día 7</td><td>Cierre amable: le dejas la puerta abierta.</td></tr>
   </table>
-  <ul class="checks">
-    <li>Estados fijos: Nuevo · Contactado · Calificado · Visita agendada · Visitó · Reserva · Perdido.</li>
-    <li>Regla del equipo: ningún lead sin responsable ni estado al final del día.</li>
-  </ul>
+  <div class="msg"><span class="lbl">Plantilla · No vino</span>Hola [NOMBRE], hoy no te hemos visto en la clase de las [HORA]. ¿Te busco otro hueco esta semana?</div>
+  <div class="msg"><span class="lbl">Plantilla · Día siguiente</span>Hola [NOMBRE], ¿qué tal la clase de ayer? Si te apuntas esta semana, no pagas matrícula. ¿Te lo dejo preparado?</div>
 
   <div class="foot"><span>captialab.com</span><span>3</span></div>
 </section>
@@ -152,22 +140,26 @@
 <section class="page">
   <div class="logo">captia<sup>✦</sup></div>
 
-  <div class="step-head"><div class="num">5</div><h2>Seguimiento con plan</h2><span class="time">5 minutos por lead</span></div>
-  <p>Que un lead no conteste no significa que no le interese: estaba ocupado. Define una secuencia y que no dependa de la memoria de cada vendedor.</p>
+  <div class="step-head"><div class="num">5</div><h2>Cada baja con respuesta, oferta y motivo</h2><span class="time">5 minutos por baja</span></div>
+  <p>Un gimnasio pierde entre el 30 % y el 50 % de sus socios cada año. No se trata de poner trabas: se trata de responder siempre, hacer una oferta y saber por qué se van.</p>
+  <ul class="checks">
+    <li>Responde cada solicitud de baja el mismo día, llegue por correo, WhatsApp o recepción.</li>
+    <li>Confirma que puede darse de baja y explica el plazo con claridad.</li>
+    <li>Pregunta el motivo una sola vez, y deja claro que es opcional.</li>
+    <li>Haz como mucho una oferta. Si dice que no, tramita la baja sin trabas.</li>
+    <li>Anota el motivo de cada baja y revísalos una vez al mes.</li>
+  </ul>
   <table>
-    <tr><th style="width:18%">Cuándo</th><th>Qué enviar</th></tr>
-    <tr><td>Minuto 1</td><td>Bienvenida + preguntas de calificación (pasos 2 y 3).</td></tr>
-    <tr><td>Mismo día</td><td>Información del proyecto (fotos, video, plano) + propuesta de visita con 2 horarios.</td></tr>
-    <tr><td>Día 1</td><td>Si no respondió: mensaje corto con una pregunta fácil.</td></tr>
-    <tr><td>Día 3</td><td>Algo nuevo: otra unidad, una cifra de dividendo, una foto distinta.</td></tr>
-    <tr><td>Día 7</td><td>Cierre amable: le dejas la puerta abierta.</td></tr>
-    <tr><td>Día 30</td><td>Reactivación: novedades o nuevas unidades disponibles.</td></tr>
+    <tr><th style="width:38%">Motivo</th><th>Oferta posible (decide tú cuáles usas)</th></tr>
+    <tr><td>Precio</td><td>Una tarifa con menos clases al mes.</td></tr>
+    <tr><td>Falta de tiempo u horario</td><td>Una tarifa más flexible o clases en otro horario.</td></tr>
+    <tr><td>Ausencia temporal o vacaciones</td><td>Una pausa de uno o dos meses.</td></tr>
+    <tr><td>Lesión o salud</td><td>Una pausa sin coste, sin pedir detalles.</td></tr>
+    <tr><td>No ve resultados</td><td>Una sesión con un entrenador para revisar objetivos.</td></tr>
+    <tr><td>Mudanza</td><td>Ninguna: se le despide bien.</td></tr>
   </table>
-  <div class="msg"><span class="lbl">Plantilla · Propuesta de visita</span>Te dejo fotos y el plano de [PROYECTO]. ¿Te acomoda visitarlo este [DÍA] a las [HORA] o el [DÍA] a las [HORA]? Te espero en la sala de ventas.</div>
-  <div class="msg"><span class="lbl">Plantilla · Día 1</span>Hola [NOMBRE], ¿alcanzaste a ver la información de [PROYECTO]? Si quieres te calculo el dividendo aproximado para la unidad que te interesó.</div>
-  <div class="msg"><span class="lbl">Plantilla · Día 3</span>Hola [NOMBRE], se liberó una unidad de [DORMITORIOS] en [PROYECTO] con orientación [ORIENTACIÓN]. ¿Te la muestro esta semana?</div>
-  <div class="msg"><span class="lbl">Plantilla · Día 7</span>Hola [NOMBRE], no quiero llenarte de mensajes. Si más adelante retomas la búsqueda, escríbeme por aquí y te ayudo con gusto.</div>
-  <div class="msg"><span class="lbl">Plantilla · Día 30</span>Hola [NOMBRE], te escribo porque hay novedades en [PROYECTO]: [NOVEDAD]. ¿Sigues buscando?</div>
+  <div class="msg"><span class="lbl">Plantilla · Respuesta a una baja</span>Hola [NOMBRE], gracias por estos meses en [GIMNASIO]. Claro que puedes darte de baja: si la pides antes del día [DÍA], ya no se te cobra el mes siguiente. ¿Te importa contarnos por qué? Nos ayuda a mejorar. Si prefieres no decirlo, no pasa nada.</div>
+  <div class="msg"><span class="lbl">Plantilla · Oferta</span>Lo entendemos. Si te va mejor, puedes pasarte a [TARIFA] por [PRECIO] o hacer una pausa de [MESES]. ¿Te interesa? Si no, tramitamos la baja sin problema.</div>
 
   <div class="foot"><span>captialab.com</span><span>4</span></div>
 </section>
@@ -175,29 +167,29 @@
 <!-- ============ CIERRE ============ -->
 <section class="page closing">
   <div class="logo">captia<sup>✦</sup></div>
-  <h1>Esto funciona.<br><span>El problema es sostenerlo.</span></h1>
-  <p style="margin-top:8mm">Los 5 pasos se pueden hacer a mano. Pero exigen que alguien esté pendiente de todos los canales, a toda hora, y que cada vendedor siga la secuencia sin olvidarse de nadie.</p>
+  <h1>Esto funciona.<br><span>Lo difícil es sostenerlo.</span></h1>
+  <p style="margin-top:8mm">Los 5 pasos se pueden hacer a mano. Pero exigen que alguien esté pendiente de todos los canales a cualquier hora, que nadie se olvide del seguimiento y que cada baja tenga respuesta, aunque llegue un domingo.</p>
   <div class="cmp">
     <div>
       <h3>A mano</h3>
       <ul>
-        <li>Alguien de guardia de noche y fines de semana</li>
-        <li>Cada vendedor responde a su manera</li>
-        <li>La planilla se actualiza cuando hay tiempo</li>
+        <li>Alguien que conteste de noche y en fin de semana</li>
+        <li>Cada persona de recepción responde a su manera</li>
         <li>El seguimiento depende de la memoria</li>
+        <li>Las bajas se tramitan cuando hay tiempo</li>
       </ul>
     </div>
     <div>
-      <h3>Con Captia</h3>
+      <h3>Con captia</h3>
       <ul>
-        <li>Respuesta en segundos en todos tus canales, 24/7</li>
-        <li>Siempre las mismas preguntas de calificación</li>
-        <li>Cada lead queda registrado en tu CRM, con su etapa</li>
-        <li>Seguimiento automático hasta agendar la visita</li>
+        <li>Respuesta al momento en todos tus canales, 24/7</li>
+        <li>En catalán y castellano, siempre con tus datos</li>
+        <li>Clase de prueba reservada y seguimiento automático</li>
+        <li>Cada baja con respuesta, una oferta y su motivo</li>
       </ul>
     </div>
   </div>
-  <p>Tu equipo recibe visitas agendadas y deja de perseguir mensajes. Te mostramos cómo funcionaría con tus proyectos en una demo.</p>
+  <p>Tu recepción recibe pruebas agendadas y bajas con su motivo, y deja de contestar lo mismo cien veces. Te enseñamos cómo funcionaría en tu gimnasio en una demo de 30 minutos.</p>
   <a class="cta" href="https://captialab.com/confirmacion-leadflow-inmo">Agenda tu demo → captialab.com</a>
   <div class="foot"><span>juan@captialab.com · @captialab</span><span>captialab.com</span></div>
 </section>
