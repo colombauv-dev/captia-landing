@@ -160,7 +160,6 @@
       first_name: contact.name.split(' ')[0],
       full_name: contact.name,
       email: contact.email,
-      phone: contact.phone,
       source: 'Diagnóstico Minuto Uno',
       diag_puntaje: r.score,
       diag_nivel: r.level.tag,
@@ -270,7 +269,6 @@
       <form class="diag-form" novalidate>
         <label>Nombre<input name="name" autocomplete="name" required placeholder="Marta Puig"></label>
         <label>Correo<input name="email" type="email" autocomplete="email" required placeholder="marta@tugimnasio.com"></label>
-        <label>WhatsApp<input name="phone" type="tel" autocomplete="tel" required placeholder="+34 600 00 00 00"></label>
         <label class="diag-consent"><input type="checkbox" name="ok" required> Acepto la <a href="/privacidad" target="_blank">política de privacidad</a> y recibir el resultado y comunicaciones de lortia.</label>
         <p class="diag-error" hidden></p>
         <div class="calc-nav">
@@ -284,14 +282,12 @@
     form.addEventListener('submit', e => {
       e.preventDefault();
       const f = Object.fromEntries(new FormData(form));
-      const phoneDigits = (f.phone || '').replace(/\D/g, '');
       let msg = '';
       if (!f.name || f.name.trim().length < 2) msg = 'Escribe tu nombre.';
       else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email || '')) msg = 'Revisa tu correo.';
-      else if (phoneDigits.length < 8) msg = 'Revisa tu número de WhatsApp.';
       else if (!f.ok) msg = 'Debes aceptar la política de privacidad.';
       if (msg) { err.textContent = msg; err.hidden = false; return; }
-      contact = { name: f.name.trim(), email: f.email.trim(), phone: f.phone.trim() };
+      contact = { name: f.name.trim(), email: f.email.trim() };
       const r = compute();
       send(r);
       render();
