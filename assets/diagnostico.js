@@ -1,5 +1,5 @@
 /* =========================================================
-   captia — Diagnóstico Minuto Uno para gimnasios (lead magnet)
+   lortia — Diagnóstico Minuto Uno para gimnasios (lead magnet)
    Todo lo editable está en el objeto DIAG:
    - webhook: URL del "Inbound Webhook" del workflow de GHL
    - pdf: checklist que se descarga al final
@@ -271,7 +271,7 @@
         <label>Nombre<input name="name" autocomplete="name" required placeholder="Marta Puig"></label>
         <label>Correo<input name="email" type="email" autocomplete="email" required placeholder="marta@tugimnasio.com"></label>
         <label>WhatsApp<input name="phone" type="tel" autocomplete="tel" required placeholder="+34 600 00 00 00"></label>
-        <label class="diag-consent"><input type="checkbox" name="ok" required> Acepto la <a href="/privacidad" target="_blank">política de privacidad</a> y recibir el resultado y comunicaciones de captia.</label>
+        <label class="diag-consent"><input type="checkbox" name="ok" required> Acepto la <a href="/privacidad" target="_blank">política de privacidad</a> y recibir el resultado y comunicaciones de lortia.</label>
         <p class="diag-error" hidden></p>
         <div class="calc-nav">
           <button type="button" class="btn-ghost" data-act="back">Atrás</button>
@@ -328,7 +328,7 @@
 
       <div class="diag-actions">
         <a class="btn-ghost" href="${DIAG.pdf}" target="_blank" rel="noopener">Descargar checklist (PDF)</a>
-        <a class="btn" href="${DIAG.demo}">Ver cómo lo resuelve captia</a>
+        <a class="btn" href="${DIAG.demo}">Ver cómo lo resuelve lortia</a>
       </div>
       <p class="diag-note">También te lo enviamos a <b>${esc(contact.email)}</b>.</p>`;
   }

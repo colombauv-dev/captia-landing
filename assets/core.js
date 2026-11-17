@@ -61,7 +61,7 @@
     if (document.querySelector('link[data-captia]')) return;
     [['icon', '48x48', 'assets/favicon-48.png'], ['icon', '192x192', 'assets/favicon-192.png'], ['apple-touch-icon', '180x180', 'assets/apple-touch-icon.png']].forEach(function (f) {
       var l = document.createElement('link');
-      l.rel = f[0]; l.type = 'image/png'; l.sizes = f[1]; l.href = BASE + f[2] + '?v=2';
+      l.rel = f[0]; l.type = 'image/png'; l.sizes = f[1]; l.href = BASE + f[2] + '?v=3';
       l.setAttribute('data-captia', '');
       document.head.appendChild(l);
     });
