@@ -161,6 +161,7 @@
       full_name: contact.name,
       email: contact.email,
       source: 'Diagnóstico Minuto Uno',
+      acepta_comunicaciones: contact.mkt ? 'Sí' : 'No',
       diag_puntaje: r.score,
       diag_nivel: r.level.tag,
       diag_leads_perdidos_mes: Math.round(r.lost),
@@ -269,7 +270,9 @@
       <form class="diag-form" novalidate>
         <label>Nombre<input name="name" autocomplete="name" required placeholder="Marta Puig"></label>
         <label>Correo<input name="email" type="email" autocomplete="email" required placeholder="marta@tugimnasio.com"></label>
-        <label class="diag-consent"><input type="checkbox" name="ok" required> Acepto la <a href="/privacidad" target="_blank">política de privacidad</a> y recibir el resultado y comunicaciones de lortia.</label>
+        <label class="diag-consent"><input type="checkbox" name="ok" required> He leído la <a href="/privacidad" target="_blank">política de privacidad</a> y acepto que lortia use mis datos para enviarme el resultado.</label>
+        <label class="diag-consent"><input type="checkbox" name="mkt"> Quiero recibir novedades y consejos de lortia por correo (opcional).</label>
+        <p class="diag-legal">Responsable: lortia. Finalidad: enviarte el resultado y, si lo marcas, novedades. Puedes acceder, rectificar o suprimir tus datos y ejercer otros derechos escribiendo a juan@getlortia.com. Más información en la <a href="/privacidad" target="_blank">política de privacidad</a>.</p>
         <p class="diag-error" hidden></p>
         <div class="calc-nav">
           <button type="button" class="btn-ghost" data-act="back">Atrás</button>
@@ -287,7 +290,7 @@
       else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email || '')) msg = 'Revisa tu correo.';
       else if (!f.ok) msg = 'Debes aceptar la política de privacidad.';
       if (msg) { err.textContent = msg; err.hidden = false; return; }
-      contact = { name: f.name.trim(), email: f.email.trim() };
+      contact = { name: f.name.trim(), email: f.email.trim(), mkt: !!f.mkt };
       const r = compute();
       send(r);
       render();
