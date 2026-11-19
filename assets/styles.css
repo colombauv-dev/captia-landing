@@ -453,3 +453,45 @@ h1, h2, h3, h4 { font-family: var(--font-head); font-weight: 600; line-height: 1
 /* ---------- Botón flotante "Diagnóstico gratis" en Key Lime ---------- */
 .calc-fab { background: var(--lima); color: var(--verde); border-color: var(--lima); box-shadow: 0 0 0 1px rgba(11, 11, 11, .35), 0 12px 30px rgba(0, 0, 0, .35), 0 0 22px rgba(222, 252, 148, .35); }
 .calc-fab:hover { filter: brightness(1.04); }
+
+/* ---------- Portada: bandeja única animada ---------- */
+.inbox { background: var(--verde-2); border: 1px solid rgba(244, 241, 234, .08); border-radius: 18px; box-shadow: 0 30px 60px rgba(0, 0, 0, .45); overflow: hidden; color: var(--crema); max-width: 590px; margin-left: auto; width: 100%; }
+.inbox-head { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid rgba(244, 241, 234, .08); }
+.inbox-head strong { font-size: 14px; display: block; }
+.inbox-head small { font-size: 11px; color: var(--humo); }
+.inbox-live { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--lima); }
+.inbox-live i { width: 7px; height: 7px; border-radius: 50%; background: var(--lima); box-shadow: 0 0 8px var(--lima); animation: pill-glow 2.4s ease-in-out infinite; }
+.inbox-filters { display: flex; gap: 6px; padding: 12px 18px; border-bottom: 1px solid rgba(244, 241, 234, .08); flex-wrap: wrap; }
+.inbox-filters span { font-size: 11.5px; padding: 4px 10px; border-radius: 999px; color: var(--humo); border: 1px solid rgba(244, 241, 234, .12); }
+.inbox-filters span.on { background: var(--crema); color: var(--verde); border-color: var(--crema); font-weight: 600; }
+.inbox-list { list-style: none; height: 372px; overflow: hidden; }
+.ib-row { display: flex; gap: 12px; padding: 14px 18px; border-bottom: 1px solid rgba(244, 241, 234, .06); animation: ib-in .45s ease; }
+.ib-row.unread { background: rgba(222, 252, 148, .05); }
+.ib-ch { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0; background: rgba(244, 241, 234, .08); color: var(--crema); }
+.ib-main { flex: 1; min-width: 0; }
+.ib-top { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; }
+.ib-top time { font-family: var(--font-mono); font-size: 11px; color: var(--humo); }
+.ib-msg { font-size: 12.5px; color: rgba(244, 241, 234, .82); margin: 3px 0 7px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ib-msg.replied { color: var(--humo); }
+.ib-typing { display: inline-flex; gap: 3px; margin-right: 4px; vertical-align: middle; }
+.ib-typing i { width: 4px; height: 4px; border-radius: 50%; background: var(--lima); animation: blink 1s infinite; }
+.ib-typing i:nth-child(2) { animation-delay: .2s; } .ib-typing i:nth-child(3) { animation-delay: .4s; }
+.ib-tags { display: flex; gap: 6px; }
+.ib-tag { font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 999px; border: 1px solid transparent; }
+.ib-tag.new { color: var(--crema); border-color: rgba(244, 241, 234, .25); }
+.ib-tag.lead { color: var(--lima); border-color: rgba(222, 252, 148, .45); }
+.ib-tag.ok { background: var(--lima); color: var(--verde); }
+.ib-tag.alert { color: #ff8a7a; border-color: rgba(255, 138, 122, .45); }
+.ib-tag.muted { color: var(--humo); border-color: rgba(244, 241, 234, .15); }
+.ib-tag.pop { animation: pop .35s ease; }
+@keyframes ib-in { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
+@media (max-width: 960px) { .inbox { margin: 0 auto; } }
+
+/* ---------- Qué incluye: dos bloques ---------- */
+.inc-group { margin-top: 56px; }
+.inc-group .cards { margin-top: 22px; }
+.inc-head { text-align: center; }
+.inc-kicker { font-family: var(--font-mono); font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--gris); }
+.inc-head h3 { font-size: 24px; margin-top: 8px; }
+.inc-note { text-align: center; color: var(--gris); font-size: 13.5px; max-width: 720px; margin: 34px auto 0; line-height: 1.6; }
+.plans-note small { display: block; font-size: 12.5px; margin-top: 8px; }

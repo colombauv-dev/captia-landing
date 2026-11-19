@@ -20,48 +20,55 @@ if (toggle && nav) {
   nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
 }
 
-/* ---------- Chat animado del hero ---------- */
-const chatBody = document.getElementById('chat-body');
-if (chatBody) {
-  const CHAT = [
-    { who: 'in',  t: 'Hola! Cuánto cuesta apuntarse?', h: '22:40' },
-    { who: 'out', t: '¡Hola! 😊 Tenemos 8 clases al mes por 60 € y 10 clases al mes por 73 €. ¿Cuántos días a la semana te gustaría venir?', h: '22:40' },
-    { who: 'in',  t: 'Unos 2 o 3, por la tarde', h: '22:41' },
-    { who: 'out', t: 'Entonces te encaja la de 10 clases. ¿Te apetece venir a probar una clase gratis? Por la tarde hay clases a las 16:00 y a las 19:00.', h: '22:41' },
-    { who: 'in',  t: 'Sí! El martes a las 19:00 me iría bien', h: '22:42' },
-    { who: 'out', t: 'Perfecto. ¿Me dices tu nombre? Se lo paso a recepción para que te confirme la plaza del martes a las 19:00.', h: '22:42' },
-    { who: 'in',  t: 'Laura Soler, gracias!', h: '22:43' }
+/* ---------- Bandeja animada del hero ---------- */
+const inboxList = document.getElementById('inbox-list');
+if (inboxList) {
+  const CH = {
+    wa: { label: 'WhatsApp', svg: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/>' },
+    ig: { label: 'Instagram', svg: '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/>' },
+    mail: { label: 'Correo', svg: '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/>' },
+    web: { label: 'Web', svg: '<circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>' }
+  };
+  // Cada conversación: llega el mensaje, el agente responde y cambia la etiqueta
+  const ROWS = [
+    { ch: 'wa', name: 'Laura Soler', time: '22:40', msg: '¿Cuánto cuesta apuntarse?', reply: 'Agente: 8 clases al mes por 60 €. ¿Cuántos días quieres venir?', tags: [['Nuevo', 'new'], ['Interesado', 'lead']] },
+    { ch: 'ig', name: 'Marc Vidal', time: '22:52', msg: 'Feu classes de pilates a la tarda?', reply: 'Agent: Sí, dimarts i dijous a les 19:00. Vols provar-ne una?', tags: [['Nuevo', 'new'], ['Interesado', 'lead'], ['Prueba agendada', 'ok']] },
+    { ch: 'mail', name: 'Jordi Puig · socio', time: '08:15', msg: 'Quiero darme de baja este mes.', reply: 'Agente: Claro, sin problema. ¿Te va mejor una pausa de un mes?', tags: [['Baja solicitada', 'alert'], ['Motivo: viaje', 'muted']] },
+    { ch: 'web', name: 'Ana Ruiz', time: '09:03', msg: '¿Tenéis parking para socios?', reply: 'Agente: Te paso con recepción para confirmártelo.', tags: [['Nuevo', 'new'], ['Pasado a recepción', 'muted']] }
   ];
   const wait = ms => new Promise(r => setTimeout(r, ms));
-  const add = el => { chatBody.appendChild(el); chatBody.scrollTop = chatBody.scrollHeight; };
+  const icon = c => `<span class="ib-ch ib-${c}" title="${CH[c].label}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${CH[c].svg}</svg></span>`;
 
-  async function playChat() {
-    chatBody.innerHTML = '';
-    for (const m of CHAT) {
-      if (m.who === 'out') {
-        const typing = document.createElement('div');
-        typing.className = 'msg typing';
-        typing.innerHTML = '<i></i><i></i><i></i>';
-        add(typing);
-        await wait(1100);
-        typing.remove();
-      } else {
-        await wait(900);
+  async function playInbox() {
+    inboxList.innerHTML = '';
+    for (const r of ROWS) {
+      const li = document.createElement('li');
+      li.className = 'ib-row unread';
+      li.innerHTML = `${icon(r.ch)}
+        <div class="ib-main">
+          <div class="ib-top"><strong>${r.name}</strong><time>${r.time}</time></div>
+          <p class="ib-msg">${r.msg}</p>
+          <div class="ib-tags"><span class="ib-tag ${r.tags[0][1]}">${r.tags[0][0]}</span></div>
+        </div>`;
+      inboxList.prepend(li);
+      await wait(1100);
+      const msg = li.querySelector('.ib-msg');
+      msg.innerHTML = '<span class="ib-typing"><i></i><i></i><i></i></span> El agente está respondiendo…';
+      await wait(1200);
+      msg.textContent = r.reply;
+      msg.classList.add('replied');
+      li.classList.remove('unread');
+      const tags = li.querySelector('.ib-tags');
+      for (const t of r.tags.slice(1)) {
+        await wait(700);
+        tags.innerHTML = `<span class="ib-tag ${t[1]} pop">${t[0]}</span>`;
       }
-      const el = document.createElement('div');
-      el.className = 'msg ' + m.who;
-      el.innerHTML = m.t + '<time>' + m.h + '</time>';
-      add(el);
+      await wait(700);
     }
-    await wait(700);
-    const chip = document.createElement('div');
-    chip.className = 'booked';
-    chip.innerHTML = ICONS.cal + ' Prueba martes 19:00 · enviada a recepción';
-    add(chip);
-    await wait(6000);
-    playChat();
+    await wait(5000);
+    playInbox();
   }
-  playChat();
+  playInbox();
 }
 
 /* ---------- FAQ (acordeón, uno abierto a la vez) ---------- */
@@ -122,13 +129,10 @@ if (diagModal) {
 })();
 
 /* ---------- Qué incluye: tarjetas por filas de tres al hacer scroll ---------- */
-(function () {
-  const grid = document.querySelector('.cards');
-  if (!grid) return;
+document.querySelectorAll('.cards').forEach(grid => {
   if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const cards = [...grid.querySelectorAll('.card')];
   grid.classList.add('reveal-ready');
-  // Cuando aparece la primera tarjeta de una fila, se muestra la fila completa
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (!e.isIntersecting) return;
@@ -139,7 +143,7 @@ if (diagModal) {
     });
   }, { threshold: 0.3, rootMargin: '0px 0px -8% 0px' });
   cards.forEach(c => io.observe(c));
-})();
+});
 
 /* ---------- Diagnóstico (celular): el botón del header baja hasta el diagnóstico ---------- */
 document.querySelectorAll('[data-scroll-diag]').forEach(btn => btn.addEventListener('click', e => {
